@@ -1,5 +1,6 @@
-import { Camera, Renderer } from "three";
+import { Camera, PerspectiveCamera, Renderer } from "three";
 import { parseControlLogaritm } from "../helpers/helpers";
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
 
 export function gameControls(camera: Camera, renderer: Renderer): {active: boolean} {
 	const screenWidth = renderer.domElement.width;
@@ -25,3 +26,10 @@ export function gameControls(camera: Camera, renderer: Renderer): {active: boole
 	return {active: true}
 }
 
+
+export function testingControlsCreator(renderer: Renderer) {
+    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 50, 100);
+    const controls = new FirstPersonControls(camera, renderer.domElement);
+    return controls;
+}

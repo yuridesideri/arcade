@@ -1,9 +1,10 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
-export function loadModel(model: GLTFLoader, path: string, scene: THREE.Scene) {
+export function loadModel(model: GLTFLoader, path: string, scene: THREE.Scene, scale?: number) {
 	model.load(
 		path,
 		function (gltf) {
+            if (scale) gltf.scene.scale.set(scale, scale, scale);
 			scene.add(gltf.scene);
 			gltf.animations;
 			Array<THREE.AnimationClip>;

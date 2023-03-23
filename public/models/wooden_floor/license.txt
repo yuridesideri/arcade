@@ -1,0 +1,11 @@
+Model Information:
+* title:	Wooden_floor
+* source:	https://sketchfab.com/3d-models/wooden-floor-7e62f1f25455486ea2473cd5f81f507e
+* author:	Inmersys (https://sketchfab.com/inmersys)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Wooden_floor" (https://sketchfab.com/3d-models/wooden-floor-7e62f1f25455486ea2473cd5f81f507e) by Inmersys (https://sketchfab.com/inmersys) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
