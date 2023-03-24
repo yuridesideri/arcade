@@ -83,6 +83,7 @@ export function createFloor(
 	scene: THREE.Scene,
 	gltfLoader: GLTFLoader
 ) {
+	
 	function loadModel(
 		model: GLTFLoader,
 		path: string,
@@ -122,16 +123,17 @@ export function createFloor(
 			}
 		);
 	}
+	loadModel(
+		gltfLoader,
+		"/models/my_plane/scene.gltf",
+		scene,
+		scale,
+		new THREE.Vector3(0, 0, 0)
+	);
 	const values = [0, -250, 250];
 	for (let i = 0; i < values.length; i++) {
 		for (let j = 0; j < values.length; j++) {
-			loadModel(
-				gltfLoader,
-				"/models/my_plane/scene.gltf",
-				scene,
-				scale,
-				new THREE.Vector3(values[i], 0, values[j])
-			);
+
 		}
 	}
 }

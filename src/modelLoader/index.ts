@@ -23,11 +23,13 @@ export function loadArcade(model: GLTFLoader, path: string, scene: THREE.Scene) 
 	);
 }
 
-export function loadLamp(model: GLTFLoader, path: string, scene: THREE.Scene) {
+export function loadLamp(model: GLTFLoader, path: string, scene: THREE.Scene, scale?: number, position?: THREE.Vector3) {
 	model.load(
 		path,
 		function (gltf) {
 			const model = gltf.scene;
+			if (scale) model.scale.set(scale, scale, scale);
+			if (position) model.position.set(position.x, position.y, position.z);
 			scene.add(model);
 			gltf.animations
 
