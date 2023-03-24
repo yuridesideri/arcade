@@ -1,11 +1,10 @@
 import "./reset.css";
-import { createFloor, createWorld, sceneResizer } from "./world";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { createWorld, sceneResizer } from "./world";
 import { gameControls, testingControlsCreator } from "./controls";
-import { loadArcade, loadLamp } from "./modelLoader";
 import { Raycaster, Vector2, Vector3 } from "three";
 import { createScreen } from "./screen";
 import TWEEN from "@tweenjs/tween.js";
+import { loadObjects } from "./objectLoader";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -22,17 +21,8 @@ function gameLoop() {
 
 // const testRenderer = loadTest(scene);
 const testingControls = testingControlsCreator(renderer);
-const gltfLoader = new GLTFLoader();
-loadArcade(gltfLoader, "/models/pac-man-machine-edited/scene.gltf", scene);
-loadLamp(
-	gltfLoader,
-	"/models/ceiling_lamp_version_01/scene.gltf",
-	scene,
-	0.15,
-	new Vector3(0, 130, 0)
-);
 createScreen(scene);
-createFloor(10, scene, gltfLoader);
+loadObjects(scene);
 sceneResizer(playerCamera, renderer);
 const { cameraDebugger } = gameControls(playerCamera, renderer);
 gameLoop();

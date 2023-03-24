@@ -49,59 +49,7 @@ export function createWorld(parentElement: HTMLElement): {
 	return { scene, camera, renderer };
 }
 
-export function createFloor(
-	scale: number,
-	scene: THREE.Scene,
-	gltfLoader: GLTFLoader
-) {
-	
-	function loadModel(
-		model: GLTFLoader,
-		path: string,
-		scene: THREE.Scene,
-		scale?: number,
-		position?: THREE.Vector3
-	) {
-		model.load(
-			path,
-			function (gltf) {
-				if (scale) gltf.scene.scale.set(scale, scale, scale);
-				if (position)
-					gltf.scene.position.set(position.x, position.y, position.z);
-				scene.add(gltf.scene);
-				gltf.scene.traverse((node) => {
-					if ((<THREE.Mesh>node).isMesh) {
-						node.receiveShadow = true;
-					}
-				});
-				gltf.animations;
-				Array<THREE.AnimationClip>;
-				gltf.scene;
-				THREE.Group;
-				gltf.scenes;
-				Array<THREE.Group>;
-				gltf.cameras;
-				Array<THREE.Camera>;
-				gltf.asset;
-				Object;
-				console.log("loaded model: ");
-			},
-			function (xhr) {
-				console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-			},
-			function (error) {
-				console.log("An error happened: ", error);
-			}
-		);
-	}
-	loadModel(
-		gltfLoader,
-		"/models/my_plane/scene.gltf",
-		scene,
-		scale,
-		new THREE.Vector3(0, 0, 0)
-	);
-}
+
 
 export function sceneResizer(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer){
 	const onWindowResize = () => {
