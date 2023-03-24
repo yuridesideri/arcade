@@ -1,17 +1,15 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-// const mesh = new THREE.BoxGeometry(1, 1, 1);
-// const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-// const cube = new THREE.Mesh(mesh, material);
-// scene.add(cube);
 export function createWorld(parentElement: HTMLElement): {
 	scene: THREE.Scene;
 	camera: THREE.PerspectiveCamera;
 	renderer: THREE.WebGLRenderer;
 } {
+	//SCENE
 	const scene = new THREE.Scene();
 
+	//CAMERA
 	const camera = new THREE.PerspectiveCamera(
 		75,
 		window.innerWidth / window.innerHeight,
@@ -21,6 +19,8 @@ export function createWorld(parentElement: HTMLElement): {
 	camera.position.set(0, 50, 100);
 	camera.rotateX(-Math.PI / 24);
 
+
+	//RENDERER
 	const renderer = new THREE.WebGLRenderer();
 	renderer.setClearColor(/* "#353535" */"black");
 	renderer.setSize(window.innerWidth, window.innerHeight);
@@ -28,34 +28,7 @@ export function createWorld(parentElement: HTMLElement): {
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 	renderer.outputEncoding = THREE.sRGBEncoding;
 
-	const keyLight = new THREE.AmbientLight(0xffffff);
-
-	const fillLight = new THREE.PointLight(0xffffff, 0.5);
-	fillLight.position.set(0, 100, 0);
-
-	const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-	directionalLight.position.set(40, 100, -30);
-	directionalLight.castShadow = true; // default false
-	const directionalLightHelper = new THREE.DirectionalLightHelper(
-		directionalLight,
-		5
-	);
-
-	const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
-	directionalLight2.position.set(-40, 200, -30);
-	directionalLight2.castShadow = true; // default false
-	const directionalLight2Helper = new THREE.DirectionalLightHelper(
-		directionalLight2,
-		10
-	);
-	const directionalLight3 = new THREE.DirectionalLight(0xffffff, 1);
-	directionalLight3.position.set(-40, 200, 30);
-	directionalLight3.castShadow = true; // default false
-	const directionalLight3Helper = new THREE.DirectionalLightHelper(
-		directionalLight3,
-		10
-	);
-
+	//LIGHTS
 	const spotLight = new THREE.SpotLight(0xffffff, 1);
 	spotLight.angle = Math.PI / 6;
 	spotLight.castShadow = true; // default false
@@ -68,10 +41,8 @@ export function createWorld(parentElement: HTMLElement): {
 	spotLight2.decay = 0.5
 	spotLight2.penumbra = 0.5
 	scene.add(spotLight2);
-
-
-	const helper = new THREE.CameraHelper(spotLight.shadow.camera);
-	scene.add(helper);
+	// const helper = new THREE.CameraHelper(spotLight.shadow.camera);
+	// scene.add(helper);
 
 
 	parentElement.appendChild(renderer.domElement);
@@ -130,10 +101,13 @@ export function createFloor(
 		scale,
 		new THREE.Vector3(0, 0, 0)
 	);
-	const values = [0, -250, 250];
-	for (let i = 0; i < values.length; i++) {
-		for (let j = 0; j < values.length; j++) {
+}
 
-		}
-	}
+export function sceneResizer(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer){
+	const onWindowResize = () => {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	};
+	window.addEventListener('resize', onWindowResize, false);
 }
