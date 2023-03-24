@@ -11,35 +11,6 @@ const app = document.querySelector<HTMLDivElement>("#app");
 
 const { scene, camera: playerCamera, renderer } = createWorld(app!);
 
-// const userControlInterface: UserControlInterface = updateUserControlInterface();
-
-// type UserControlInterface = {
-// 	clickMouse: Vector2;
-// 	moveMouse: Vector2;
-// };
-
-// const useControlsInterface = () => {
-// 	const setClickMouse = new Vector2();
-// 	const setMoveMouse = new Vector2();
-
-// 	const mouseDown = (e: MouseEvent) => {
-// 		setClickMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-// 		setClickMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-// 		const intersects = raycaster.intersectObjects(scene.children);
-// 		if (intersects.length > 0) {
-// 			console.log(intersects[0].object);
-// 		}
-// 	};
-// 	const mouseMove = (e: MouseEvent) => {
-// 		setMoveMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-// 		setMoveMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-// 	};
-// 	//event listeners options
-// 	window.addEventListener("mousedown", mouseDown);
-// 	window.addEventListener("mousemove", mouseMove);
-
-// 	return { updateControlInterface, controlInterface };
-// };
 
 function gameLoop() {
 	renderer.render(scene, playerCamera);
@@ -66,26 +37,34 @@ sceneResizer(playerCamera, renderer);
 const { cameraDebugger } = gameControls(playerCamera, renderer);
 gameLoop();
 
-const raycaster = new Raycaster();
-//raycaster may be about point relative to camera
 
 window.addEventListener("click", (e) => {
+	const raycaster = new Raycaster();
+	const pointer = new Vector2();
+	pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+	pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+	raycaster.setFromCamera( pointer, playerCamera );
 	const intersects = raycaster.intersectObjects(scene.children);
 	if (intersects.length > 0) {
 		console.log(intersects);
-		//BUG: Machine is being clicked anywhere on the screen
 		intersects.forEach((intersect) => {
 			if (
 				intersect.object.userData.name ===
 				"pac man machine_automat_0.001"
+				&& playerCamera.position.z > 26
+				&& !intersect.object.userData.activeAnimation
 			) {
 				const tween = new TWEEN.Tween({
 					z: playerCamera.position.z,
 					xRotation: playerCamera.rotation.x,
-				}).to({ z: playerCamera.position.z - 75, xRotation: playerCamera.rotation.x - Math.PI/12 }, 1000).onUpdate((coords) => {
+				}).to({ z: playerCamera.position.z - 75, xRotation: playerCamera.rotation.x - Math.PI/11 }, 1000).onUpdate((coords) => {
 					playerCamera.position.z = coords.z;
 					playerCamera.rotation.x = coords.xRotation;
-				})
+				}).onComplete(() => {
+					intersect.object.userData.activeAnimation = false;
+				}).onStart(() => {
+					intersect.object.userData.activeAnimation = true;
+				}) 
 				tween.start()
 			}
 		});
