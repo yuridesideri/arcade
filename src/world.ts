@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 export function createWorld(parentElement: HTMLElement): {
 	scene: THREE.Scene;
@@ -44,6 +43,8 @@ export function createWorld(parentElement: HTMLElement): {
 	// const helper = new THREE.CameraHelper(spotLight.shadow.camera);
 	// scene.add(helper);
 
+
+	//PAC-MAN GAME
 
 	parentElement.appendChild(renderer.domElement);
 	return { scene, camera, renderer };

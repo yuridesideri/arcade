@@ -107,14 +107,26 @@ export function createFloor(
 	);
 }
 
-export function createScreenMesh(scene: THREE.Scene){
-    const geometry = new THREE.PlaneGeometry( 20,23 );
-    const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-    const mesh = new THREE.Mesh( geometry, material );
-    mesh.position.set(0, 39, -3);
-    mesh.rotateX(-0.81);
-    scene.add( mesh );
-
+export function createScreenMesh(scene: THREE.Scene) {
+	const renderTarget = new THREE.WebGLRenderTarget(512, 512);
+	const secondaryCamera = new THREE.PerspectiveCamera(
+		75,
+		window.innerWidth / window.innerHeight,
+		0.1,
+		1000
+	);
+    secondaryCamera.position.set(0, 0, 10);
+    const secondaryScene = new THREE.Scene();
+    secondaryScene.background = new THREE.Color("blue");
+	const geometry = new THREE.PlaneGeometry(23, 23);
+	const material = new THREE.MeshPhongMaterial({
+		map: renderTarget.texture,
+	});
+	const mesh = new THREE.Mesh(geometry, material);
+	mesh.position.set(0, 39, -3);
+	mesh.rotateX(-0.81);
+	scene.add(mesh);
+    return {renderTarget, secondaryCamera, secondaryScene}
 }
 
 export function loadObjects(scene: THREE.Scene) {
@@ -127,5 +139,4 @@ export function loadObjects(scene: THREE.Scene) {
 		new THREE.Vector3(0, 130, 0)
 	);
 	createFloor(10, scene, gltfLoader);
-    createScreenMesh(scene);
 }
