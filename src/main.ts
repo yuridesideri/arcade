@@ -1,8 +1,7 @@
 import "./reset.css";
 import { createWorld, sceneResizer } from "./world";
 import { gameControls, testingControlsCreator } from "./controls";
-import { Raycaster, Vector2, Vector3 } from "three";
-import { createScreen } from "./screen";
+import { Raycaster, Vector2 } from "three";
 import TWEEN from "@tweenjs/tween.js";
 import { loadObjects } from "./objectLoader";
 
@@ -21,7 +20,6 @@ function gameLoop() {
 
 // const testRenderer = loadTest(scene);
 const testingControls = testingControlsCreator(renderer);
-createScreen(scene);
 loadObjects(scene);
 sceneResizer(playerCamera, renderer);
 const { cameraDebugger } = gameControls(playerCamera, renderer);

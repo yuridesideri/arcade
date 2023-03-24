@@ -107,6 +107,16 @@ export function createFloor(
 	);
 }
 
+export function createScreenMesh(scene: THREE.Scene){
+    const geometry = new THREE.PlaneGeometry( 20,23 );
+    const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    const mesh = new THREE.Mesh( geometry, material );
+    mesh.position.set(0, 39, -3);
+    mesh.rotateX(-0.81);
+    scene.add( mesh );
+
+}
+
 export function loadObjects(scene: THREE.Scene) {
 	loadArcade(gltfLoader, "/models/pac-man-machine-edited/scene.gltf", scene);
 	loadLamp(
@@ -117,4 +127,5 @@ export function loadObjects(scene: THREE.Scene) {
 		new THREE.Vector3(0, 130, 0)
 	);
 	createFloor(10, scene, gltfLoader);
+    createScreenMesh(scene);
 }
