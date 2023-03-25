@@ -99,8 +99,8 @@ const gridHelper = new THREE.GridHelper( size, divisions )
 gridHelper.rotateX(Math.PI/2);
 secondaryScene.add( gridHelper );
 
-const planeGeo = new THREE.PlaneGeometry(6 * 2, 5 * 2, 16 * 1, 16 * 1);
+const planeGeo = new THREE.PlaneGeometry(6 * 2, 6 * 2, 16 * 1, 16 * 1);
 const planeMat = new THREE.MeshBasicMaterial({ color: 0x000 });
 const plane = new THREE.Mesh(planeGeo, planeMat);
-plane.position.set(0, -1.5, 0);
+plane.position.set(0, 0, 0);
 secondaryScene.add(plane);

@@ -116,15 +116,15 @@ export function createScreenMesh(scene: THREE.Scene) {
 		0.1,
 		1000
 	);
-    secondaryCamera.position.set(-0.15, 0, 10);
+    secondaryCamera.position.set(0, 0, 10);
     const secondaryScene = new THREE.Scene();
     secondaryScene.background = new THREE.Color("blue");
-	const geometry = new THREE.PlaneGeometry(23, 23);
+	const geometry = new THREE.PlaneGeometry(22, 22);
 	const material = new THREE.MeshPhongMaterial({
 		map: renderTarget.texture,
 	});
 	const mesh = new THREE.Mesh(geometry, material);
-	mesh.position.set(0, 39, -3);
+	mesh.position.set(0.25, 38.2, -2.05);
 	mesh.rotateX(-0.81);
 	scene.add(mesh);
     return {renderTarget, secondaryCamera, secondaryScene}
