@@ -30,14 +30,11 @@ function gameLoop() {
 
 	//PRIMARY
 	renderer.render(scene, pacManCamera);
-	testingControls.update(1);
 	TWEEN.update();
 	cameraDebugger();
 	window.requestAnimationFrame(gameLoop);
 }
 
-// const testRenderer = loadTest(scene);
-const testingControls = testingControlsCreator(renderer);
 loadObjects(scene);
 sceneResizer(playerCamera, renderer);
 const { cameraDebugger } = gameControls(playerCamera, renderer);
@@ -95,11 +92,15 @@ const geo = new THREE.BoxGeometry(1, 1, 1);
 const mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 const cube = new THREE.Mesh(geo, mat);
 cube.position.set(0, 0, 0);
+secondaryScene.add(cube);
 const size = 10;
 const divisions = 10;
-
 const gridHelper = new THREE.GridHelper( size, divisions )
 gridHelper.rotateX(Math.PI/2);
 secondaryScene.add( gridHelper );
 
-secondaryScene.add(cube);
+const planeGeo = new THREE.PlaneGeometry(6 * 2, 5 * 2, 16 * 1, 16 * 1);
+const planeMat = new THREE.MeshBasicMaterial({ color: 0x000 });
+const plane = new THREE.Mesh(planeGeo, planeMat);
+plane.position.set(0, -1.5, 0);
+secondaryScene.add(plane);

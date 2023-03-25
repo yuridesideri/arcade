@@ -15,6 +15,7 @@ export function loadArcade(
 			model.traverse((node) => {
 				if ((<THREE.Mesh>node).isMesh) {
 					node.castShadow = true;
+                    node.receiveShadow = true;
 				}
 			});
 			gltf.animations;
@@ -115,7 +116,7 @@ export function createScreenMesh(scene: THREE.Scene) {
 		0.1,
 		1000
 	);
-    secondaryCamera.position.set(0, 0, 10);
+    secondaryCamera.position.set(-0.15, 0, 10);
     const secondaryScene = new THREE.Scene();
     secondaryScene.background = new THREE.Color("blue");
 	const geometry = new THREE.PlaneGeometry(23, 23);
