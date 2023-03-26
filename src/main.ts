@@ -88,17 +88,16 @@ window.addEventListener("click", (e) => {
 
 //PAC MAN GAME
 
-const geo = new THREE.BoxGeometry(0.32, 0.32, 0.1);
-const mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const geo = new THREE.PlaneGeometry(0.3, 0.3);
+const mat = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide }, );
 const cube = new THREE.Mesh(geo, mat);
-cube.position.set(0, 0, 0);
+const z = 0.1
 secondaryScene.add(cube);
 const size = 10;
 const divisions = 32;
 const gridHelper = new THREE.GridHelper( size, divisions )
 gridHelper.rotateX(Math.PI/2);
-gridHelper.position.set(0, 0, 0.01);
-secondaryScene.add( gridHelper );
+gridHelper.position.set(0, 0, 0.001);
 
 const texture = new THREE.TextureLoader().load( 'textures/pac-man-screen/screen-texture.png' );
 const planeGeo = new THREE.PlaneGeometry(10, 10);
@@ -106,4 +105,22 @@ const planeMat = new THREE.MeshBasicMaterial( { map: texture },  );
 const plane = new THREE.Mesh(planeGeo, planeMat);
 plane.position.set(0, 0, 0);
 secondaryScene.add(plane);
+
+
+//mapping the texture:
+const startingPoint = new THREE.Vector2(0, -0.64);
+let t = startingPoint;
+t = new THREE.Vector2(4.35, 3.15);
+
+const moveTo = t;
+cube.position.set(moveTo.x, moveTo.y, z);
+
+//map
+
+const hashmap = {};
+const map = [
+	[0.53, 4.32], [2.6, 4.32], [4.35, 4.32],
+	[0.53, 3.15], [1.58, 3.15], [2.6, 3.15], [4.35, 3.15],
+	
+]
 
