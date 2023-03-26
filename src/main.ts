@@ -88,19 +88,22 @@ window.addEventListener("click", (e) => {
 
 //PAC MAN GAME
 
-const geo = new THREE.BoxGeometry(1, 1, 1);
+const geo = new THREE.BoxGeometry(0.32, 0.32, 0.1);
 const mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 const cube = new THREE.Mesh(geo, mat);
 cube.position.set(0, 0, 0);
 secondaryScene.add(cube);
 const size = 10;
-const divisions = 10;
+const divisions = 32;
 const gridHelper = new THREE.GridHelper( size, divisions )
 gridHelper.rotateX(Math.PI/2);
+gridHelper.position.set(0, 0, 0.01);
 secondaryScene.add( gridHelper );
 
-const planeGeo = new THREE.PlaneGeometry(6 * 2, 6 * 2, 16 * 1, 16 * 1);
-const planeMat = new THREE.MeshBasicMaterial({ color: 0x000 });
+const texture = new THREE.TextureLoader().load( 'textures/pac-man-screen/screen-texture.png' );
+const planeGeo = new THREE.PlaneGeometry(10, 10);
+const planeMat = new THREE.MeshBasicMaterial( { map: texture },  );
 const plane = new THREE.Mesh(planeGeo, planeMat);
 plane.position.set(0, 0, 0);
 secondaryScene.add(plane);
+
