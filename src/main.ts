@@ -3,7 +3,7 @@ import { createWorld, sceneResizer } from "./world";
 import { gameControls, testingControlsCreator } from "./controls";
 import { CubeCamera, Raycaster, Vector2 } from "three";
 import TWEEN from "@tweenjs/tween.js";
-import { createScreenMesh, loadObjects } from "./objectLoader";
+import { createPacman, createScreenMesh, loadObjects } from "./objectLoader";
 import * as THREE from "three";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -11,6 +11,7 @@ const app = document.querySelector<HTMLDivElement>("#app");
 const { scene, camera: playerCamera, renderer } = createWorld(app!);
 const { renderTarget, secondaryCamera, secondaryScene } =
 	createScreenMesh(scene);
+let animationMixer: THREE.AnimationMixer;
 
 	 const pacManCamera = new THREE.PerspectiveCamera(
 		75,
@@ -33,6 +34,9 @@ function gameLoop() {
 	TWEEN.update();
 	cameraDebugger();
 	window.requestAnimationFrame(gameLoop);
+
+	//ANIMATION CONFIG
+	animationMixer?.update(0.02);
 }
 
 loadObjects(scene);
@@ -107,8 +111,12 @@ plane.position.set(0, 0, 0);
 secondaryScene.add(plane);
 
 
+
 //mapping the texture:
 const startingPoint = new THREE.Vector2(0, -0.64);
+const {pacman, mixer} = await createPacman(secondaryScene, startingPoint);
+animationMixer = mixer;
+
 let t = startingPoint;
 t = new THREE.Vector2(4.35, -4.38);
 
