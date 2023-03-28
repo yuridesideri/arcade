@@ -6,3 +6,9 @@ export type MapPointDirections = {
     x: number[];
     y: number[];
 }
+
+export type userControls = {
+    direction: THREE.Vector2;
+}
+
+export type GhostNames = "blinky" | "pinky" | "inky" | "clyde";

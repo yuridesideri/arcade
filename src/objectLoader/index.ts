@@ -186,7 +186,7 @@ export async function createPacman(
 	return { pacman, mixer };
 }
 
-export async function createGhosts(
+export async function createGhost(
 	scene: THREE.Scene,
 	path: string,
 	position?: THREE.Vector2

@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import { Vector2 } from "three";
-import { createGhosts, createPacman } from "./objectLoader";
-import { MapPointDirections, PacmanMap } from "./types/pacmanGame";
+import { createGhost, createPacman } from "./objectLoader";
+import { GhostNames, MapPointDirections, PacmanMap, userControls } from "./types/pacmanGame";
 import pacmanMap, { pacmanStartingPoint } from "./constants/pacmanMap";
 
 export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 	const scene = new THREE.Scene();
-	scene.background = new THREE.Color("blue");
+	scene.background = new THREE.Color("black");
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 	camera.position.set(0, 0, 9.5);
 
@@ -14,49 +14,30 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 		scene,
 		pacmanStartingPoint
 	);
-	const { ghost: redGhost, mixer: redGhostMixer } = await createGhosts(
+	const { ghost: redGhost, mixer: redGhostMixer } = await createGhost(
 		scene,
 		"/models/ghosts/ghost-red-animated.gltf",
 		new THREE.Vector2(-0.2, 0.35)
 	);
-	const { ghost: blueGhost, mixer: blueGhostMixer } = await createGhosts(
+	const { ghost: blueGhost, mixer: blueGhostMixer } = await createGhost(
 		scene,
 		"/models/ghosts/ghost-cyan-animated.gltf",
 		new THREE.Vector2(0.3, 0.35)
 	);
-	const { ghost: yellowGhost, mixer: yellowGhostMixer } = await createGhosts(
+	const { ghost: yellowGhost, mixer: yellowGhostMixer } = await createGhost(
 		scene,
 		"/models/ghosts/ghost-yellow-animated.gltf",
 		new THREE.Vector2(-0.7, 0.35)
 	);
-	const { ghost: pinkGhost, mixer: pinkGhostMixer } = await createGhosts(
+	const { ghost: pinkGhost, mixer: pinkGhostMixer } = await createGhost(
 		scene,
 		"/models/ghosts/ghost-pink-animated.gltf",
 		new THREE.Vector2(0.8, 0.35)
 	);
 
-	const pacmanControls = {
-		speed: 0.01,
-		direction: new THREE.Vector2(1, 0),
-		rotation: 0,
-	};
-
 	const userControls = {
 		direction: new THREE.Vector2(1, 0),
 	};
-
-	function mapColisionChecker(entityPosition: THREE.Vector2, map: PacmanMap) {
-		const entityPositionRounded = new THREE.Vector2(
-			Math.round(entityPosition.x * 100) / 100,
-			Math.round(entityPosition.y * 100) / 100
-		);
-		const mapColisionPoint = map.find(
-			(point) =>
-				(<Vector2>point[0]).x === entityPositionRounded.x &&
-				(<Vector2>point[0]).y === entityPositionRounded.y
-		);
-		return mapColisionPoint;
-	}
 
 	const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 	scene.add(ambientLight);
@@ -83,25 +64,28 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 	plane.position.set(0, 0, 0);
 	scene.add(plane);
 
-	let t = pacmanStartingPoint;
-	t = new THREE.Vector2(0, -0.65);
+	const updatePacman = PacmanGameLogic(pacman, userControls);
 
-	const moveTo = t;
-	pacman.position.set(moveTo.x, moveTo.y, z);
+	function pacmanGameLoop() {
+		mainRenderer.render(scene, camera);
+		pacmanMixer?.update(0.02);
+		redGhostMixer?.update(0.01);
+		blueGhostMixer?.update(0.01);
+		yellowGhostMixer?.update(0.01);
+		pinkGhostMixer?.update(0.01);
 
-	//map
-	const map: PacmanMap = pacmanMap;
+		updatePacman();
+	}
 
-	//Parse to Three.js Vector2
-	const mapRounded = map.map((point) => {
-		return [
-			new THREE.Vector2(
-				Math.round(<number>point[0] * 100) / 100,
-				Math.round(<number>point[1] * 100) / 100
-			),
-			point[2],
-		];
-	});
+	return pacmanGameLoop;
+}
+
+function PacmanGameLogic(pacman: THREE.Group, userControls: userControls) {
+	const pacmanControls = {
+		speed: 0.01,
+		direction: new THREE.Vector2(1, 0),
+		rotation: 0,
+	};
 
 	window.addEventListener("keydown", (e) => {
 		console.log("pressed");
@@ -129,18 +113,12 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 		}
 	});
 
-	function pacmanGameLoop() {
-		mainRenderer.render(scene, camera);
-		pacmanMixer?.update(0.02);
-		redGhostMixer?.update(0.01);
-		blueGhostMixer?.update(0.01);
-		yellowGhostMixer?.update(0.01);
-		pinkGhostMixer?.update(0.01);
-
+	function updatePacman() {
 		const possibleMapColision = mapColisionChecker(
 			new Vector2(pacman.position.x, pacman.position.y),
-			mapRounded
+			pacmanMap
 		);
+
 		if (possibleMapColision) {
 			if (
 				(<MapPointDirections>possibleMapColision[1]).x.includes(
@@ -179,5 +157,44 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 		}
 	}
 
-	return pacmanGameLoop;
+	return updatePacman;
+}
+
+function mapColisionChecker(entityPosition: THREE.Vector2, map: PacmanMap) {
+	const mapRounded = map.map((point) => {
+		return [
+			new THREE.Vector2(
+				Math.round(<number>point[0] * 100) / 100,
+				Math.round(<number>point[1] * 100) / 100
+			),
+			point[2],
+		];
+	});
+
+	const entityPositionRounded = new THREE.Vector2(
+		Math.round(entityPosition.x * 100) / 100,
+		Math.round(entityPosition.y * 100) / 100
+	);
+	const mapColisionPoint = mapRounded.find(
+		(point) =>
+			(<Vector2>point[0]).x === entityPositionRounded.x &&
+			(<Vector2>point[0]).y === entityPositionRounded.y
+	);
+	return mapColisionPoint;
+}
+
+function GhostLogic(ghost: THREE.Group, type: GhostNames){
+	let timeInterval;
+	if (type === "blinky"){
+		timeInterval = 5000;
+	} else if (type === "pinky"){
+		timeInterval = 10000;
+	}
+	else if (type === "inky"){
+		timeInterval = 15000;
+	}
+	else if (type === "clyde"){
+		timeInterval = 20000;
+	}
+	
 }
