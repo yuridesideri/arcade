@@ -111,20 +111,17 @@ export function createFloor(
 
 export function createScreenMesh(scene: THREE.Scene) {
 	const renderTarget = new THREE.WebGLRenderTarget(512, 512);
-	const secondaryCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-	secondaryCamera.position.set(0, 0, 9.5);
-	const secondaryScene = new THREE.Scene();
-	secondaryScene.background = new THREE.Color("blue");
 	const geometry = new THREE.PlaneGeometry(22, 22);
 	const material = new THREE.MeshPhongMaterial({
 		map: renderTarget.texture,
 	});
 	material.shininess = 2;
-	const mesh = new THREE.Mesh(geometry, material);
-	mesh.position.set(0.25, 38.2, -2.05);
-	mesh.rotateX(-0.81);
-	scene.add(mesh);
-	return { renderTarget, secondaryCamera, secondaryScene };
+	const screenMesh = new THREE.Mesh(geometry, material);
+	screenMesh.position.set(0.25, 38.2, -2.05);
+	screenMesh.rotateX(-0.81);
+	scene.add(screenMesh);
+	screenMesh.userData = { renderTarget }
+	return screenMesh;
 }
 
 export async function createPacman(
