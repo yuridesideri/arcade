@@ -188,21 +188,22 @@ export async function createPacman(
 
 export async function createGhosts(
 	scene: THREE.Scene,
+	path: string,
 	position?: THREE.Vector2
 ) {
 	//LOAD MODEL
-	const gltf = await loadModel(
+	let gltf = await loadModel(
 		gltfLoader,
-		"/models/ghosts/ghost-red-animated.gltf",
+		path,
 		scene,
 		undefined,
 		0.2,
 		position? new THREE.Vector3(position.x, position.y, 0.02) : undefined
 	)
-	const ghostRed = gltf.scene;
+	const ghost = gltf.scene;
 	//ANIMATIONS
 	let mixer: THREE.AnimationMixer;
-	mixer = new THREE.AnimationMixer(ghostRed);
+	mixer = new THREE.AnimationMixer(ghost);
 	const animations = gltf.animations;
 	animations.forEach((animation) => {
 		const action = mixer.clipAction(animation);
@@ -210,7 +211,7 @@ export async function createGhosts(
 	});
 
 	//RETURN
-	return { ghosts: [ghostRed], mixer };
+	return { ghost, mixer };
 }
 
 export function loadObjects(scene: THREE.Scene) {
