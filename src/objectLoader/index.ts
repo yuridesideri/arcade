@@ -2,6 +2,30 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { Mesh } from "three";
 
+async function loadModel(
+	loader: GLTFLoader,
+	path: string,
+	scene: THREE.Scene,
+	traverseMeshCallback?: (node: THREE.Mesh) => void,
+	scale?: number,
+	position?: THREE.Vector3
+) {
+	const modelPromise = loader.loadAsync(path, function (xhr) {
+		console.log((xhr.loaded / xhr.total) * 100 + "% loaded" + " "  + path.split("/").pop());
+	});
+	const model = await modelPromise;
+	if (scale) model.scene.scale.set(scale, scale, scale);
+	if (position)
+		model.scene.position.set(position.x, position.y, position.z);
+	model.scene.traverse((node) => {
+		if ((<THREE.Mesh>node).isMesh && traverseMeshCallback)
+			traverseMeshCallback(<THREE.Mesh>node);
+	});
+	//ADD TO SCENE
+	scene.add(model.scene);
+	return model;
+}
+
 const gltfLoader = new GLTFLoader();
 export function loadArcade(
 	model: GLTFLoader,
@@ -134,30 +158,6 @@ export async function createPacman(
 		});
 		node.material = newMaterial;
 	}
-
-	async function loadModel(
-		loader: GLTFLoader,
-		path: string,
-		scene: THREE.Scene,
-		traverseMeshCallback?: (node: THREE.Mesh) => void,
-		scale?: number,
-		position?: THREE.Vector3
-	) {
-		const modelPromise = loader.loadAsync(path, function (xhr) {
-			console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-		});
-		const model = await modelPromise;
-		if (scale) model.scene.scale.set(scale, scale, scale);
-		if (position)
-			model.scene.position.set(position.x, position.y, position.z);
-		model.scene.traverse((node) => {
-			if ((<THREE.Mesh>node).isMesh && traverseMeshCallback)
-				traverseMeshCallback(<THREE.Mesh>node);
-		});
-		//ADD TO SCENE
-		scene.add(model.scene);
-		return model;
-	}
 	//LOAD MODEL
 	const gltf = await loadModel(
 		gltfLoader,
@@ -184,6 +184,33 @@ export async function createPacman(
 
 	//RETURN
 	return { pacman, mixer };
+}
+
+export async function createGhosts(
+	scene: THREE.Scene,
+	position?: THREE.Vector2
+) {
+	//LOAD MODEL
+	const gltf = await loadModel(
+		gltfLoader,
+		"/models/ghosts/ghost-red-animated.gltf",
+		scene,
+		undefined,
+		0.2,
+		position? new THREE.Vector3(position.x, position.y, 0.02) : undefined
+	)
+	const ghostRed = gltf.scene;
+	//ANIMATIONS
+	let mixer: THREE.AnimationMixer;
+	mixer = new THREE.AnimationMixer(ghostRed);
+	const animations = gltf.animations;
+	animations.forEach((animation) => {
+		const action = mixer.clipAction(animation);
+		action.play();
+	});
+
+	//RETURN
+	return { ghosts: [ghostRed], mixer };
 }
 
 export function loadObjects(scene: THREE.Scene) {

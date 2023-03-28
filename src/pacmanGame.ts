@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { Vector2 } from "three";
-import { createPacman } from "./objectLoader";
-import { MapPointDirections, PacmanMap } from "./types/pacmanMap";
+import { createGhosts, createPacman } from "./objectLoader";
+import { MapPointDirections, PacmanMap } from "./types/pacmanGame";
+import pacmanMap, { pacmanStartingPoint } from "./constants/pacmanMap";
 
 export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 	const scene = new THREE.Scene();
@@ -10,6 +11,9 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 	camera.position.set(0, 0, 9.5);
 
 	let animationMixer: THREE.AnimationMixer;
+	const { pacman, mixer:pacmanMixer } = await createPacman(scene, pacmanStartingPoint);
+	const { ghosts, mixer:ghostMixer } = await createGhosts(scene, new THREE.Vector2(0, 0.35));
+	animationMixer = pacmanMixer;
 
 	const pacmanControls = {
 		speed: 0.01,
@@ -21,19 +25,21 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 		direction: new THREE.Vector2(1, 0),
 	};
 
-	function mapColisionChecker(pacmanPosition: THREE.Vector2, map: PacmanMap) {
-		const pacmanPositionRounded = new THREE.Vector2(
-			Math.round(pacmanPosition.x * 100) / 100,
-			Math.round(pacmanPosition.y * 100) / 100
+	function mapColisionChecker(entityPosition: THREE.Vector2, map: PacmanMap) {
+		const entityPositionRounded = new THREE.Vector2(
+			Math.round(entityPosition.x * 100) / 100,
+			Math.round(entityPosition.y * 100) / 100
 		);
 		const mapColisionPoint = map.find(
 			(point) =>
-				(<Vector2>point[0]).x === pacmanPositionRounded.x &&
-				(<Vector2>point[0]).y === pacmanPositionRounded.y
+				(<Vector2>point[0]).x === entityPositionRounded.x &&
+				(<Vector2>point[0]).y === entityPositionRounded.y
 		);
 		return mapColisionPoint;
 	}
 
+	const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+	scene.add(ambientLight);
 	const geo = new THREE.PlaneGeometry(0.3, 0.3);
 	const mat = new THREE.MeshBasicMaterial({
 		color: 0xff0000,
@@ -57,45 +63,17 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 	plane.position.set(0, 0, 0);
 	scene.add(plane);
 
-	//mapping the texture:
-	const startingPoint = new THREE.Vector2(0, -0.65);
-	const { pacman, mixer } = await createPacman(scene, startingPoint);
-	animationMixer = mixer;
-
-	let t = startingPoint;
+	let t = pacmanStartingPoint;
 	t = new THREE.Vector2(0, -0.65);
 
 	const moveTo = t;
 	pacman.position.set(moveTo.x, moveTo.y, z);
 
 	//map
+	const map: PacmanMap = pacmanMap;
 
-	const map = [
-	[0.53, 4.32, {x:[1], y:[-1]}], [2.6, 4.32, {x:[1,-1], y:[-1]}], [4.35, 4.32, {x:[-1], y:[-1]}],
-	[0.53, 3.15, {x:[1,-1], y:[1]}], [1.58, 3.15, {x:[1,-1], y:[-1]}], [2.6, 3.15, {x:[1,-1], y:[1,-1]}], [4.35, 3.15, {x:[-1], y:[1, -1]}],
-	[0.53, 2.23, {x: [1], y:[-1]}], [1.58, 2.23, {x:[-1], y:[1]}], [2.6, 2.23, {x:[1], y:[1, -1]}], [4.35, 2.23, {x:[-1], y:[1]}],
-	[0.53, 1.25, {x:[1, -1], y:[1]}], [1.58, 1.25, {x:[-1], y:[-1]}],
-	[1.58, 0.35, {x:[1], y:[1, -1]}], [2.6, 0.35, {x:[1,-1], y:[1, -1]}],
-	[1.58, -0.65, {x:[-1], y:[1,-1]}],
-	[0.53, -1.55, {x:[1], y:[-1]}], [1.58, -1.55, {x:[1, -1], y:[1]}], [2.6, -1.55,{x:[1,-1], y:[1,-1]}], [4.35, -1.55, {x: [-1], y:[-1]}],
-	[0.53, -2.53, {x:[1, -1], y: [1]}], [1.58, -2.53,{x:[1, -1], y: [-1]}], [2.6, -2.53, {x:[-1], y:[1, -1]}], [3.65, -2.53, {x:[1], y:[-1]}], [4.35, -2.53, {x:[-1], y:[1]}],
-	[0.53, -3.48, {x: [1], y:[-1]}], [1.58, -3.48, {x:[-1], y:[1]}], [2.6, -3.48, {x:[1], y:[1]}], [3.65, -3.48, {x:[1,-1], y:[1]}], [4.35, -3.48, {x: [-1], y:[-1]}],
-	[0.53, -4.38, {x:[1,-1], y:[1]}], [4.35, -4.38, {x:[-1], y:[1]}],
-	//Retype everything with negative x
-	[-0.53, 4.32, {x:[-1], y:[-1]}], [-2.6, 4.32, {x:[-1,1], y:[-1]}], [-4.35, 4.32, {x:[1], y:[-1]}],
-	[-0.53, 3.15, {x:[-1,1], y:[1]}], [-1.58, 3.15, {x:[-1,1], y:[-1]}], [-2.6, 3.15, {x:[-1,1], y:[1,-1]}], [-4.35, 3.15, {x:[1], y:[1, -1]}],
-	[-0.53, 2.23, {x: [-1], y:[-1]}], [-1.58, 2.23, {x:[1], y:[1]}], [-2.6, 2.23, {x:[-1], y:[1, -1]}], [-4.35, 2.23, {x:[1], y:[1]}],
-	[-0.53, 1.25, {x:[-1, 1], y:[1]}], [-1.58, 1.25, {x:[1], y:[-1]}],
-	[-1.58, 0.35, {x:[-1], y:[1, -1]}], [-2.6, 0.35, {x:[-1,1], y:[1, -1]}],
-	[-1.58, -0.65, {x:[1], y:[1,-1]}],
-	[-0.53, -1.55, {x:[-1], y:[-1]}], [-1.58, -1.55, {x:[-1, 1], y:[1]}], [-2.6, -1.55,{x:[-1,1], y:[1,-1]}], [-4.35, -1.55, {x: [1], y:[-1]}],
-	[-0.53, -2.53, {x:[-1, 1], y: [1]}], [-1.58, -2.53,{x:[-1, 1], y: [-1]}], [-2.6, -2.53, {x:[1], y:[1, -1]}], [-3.65, -2.53, {x:[-1], y:[-1]}], [-4.35, -2.53, {x:[1], y:[1]}],
-	[-0.53, -3.48, {x: [-1], y:[-1]}], [-1.58, -3.48, {x:[1], y:[1]}], [-2.6, -3.48, {x:[-1], y:[1]}], [-3.65, -3.48, {x:[-1,1], y:[1]}], [-4.35, -3.48, {x: [1], y:[-1]}],
-	[-0.53, -4.38, {x:[-1,1], y:[1]}], [-4.35, -4.38, {x:[1], y:[1]}],
-
-];
-//Parse to Three.js Vector2
-const mapRounded = map.map((point) => {
+	//Parse to Three.js Vector2
+	const mapRounded = map.map((point) => {
 		return [
 			new THREE.Vector2(
 				Math.round(<number>point[0] * 100) / 100,
@@ -171,11 +149,10 @@ const mapRounded = map.map((point) => {
 		if (pacman.position.x > 5) {
 			pacman.position.x = -5;
 		}
+		if (pacman.position.x < -5) {
+			pacman.position.x = 5;
+		}
 	}
 
-    return pacmanGameLoop;
-    return pacmanGameLoop;
-
 	return pacmanGameLoop;
-
 }
