@@ -159,7 +159,6 @@ export async function createPacman(
 		});
 		//ADD TO SCENE
 		scene.add(model.scene);
-		console.log("loaded model", model.scene);
 		return model;
 	}
 	//LOAD MODEL

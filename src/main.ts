@@ -5,6 +5,7 @@ import { CubeCamera, Raycaster, Vector2 } from "three";
 import TWEEN from "@tweenjs/tween.js";
 import { createPacman, createScreenMesh, loadObjects } from "./objectLoader";
 import * as THREE from "three";
+import { MapPointDirections, PacmanMap } from "./types/pacmanMap";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -25,6 +26,15 @@ pacManCamera.rotateX(-0.45);
 loadObjects(scene);
 sceneResizer(playerCamera, renderer);
 const { cameraDebugger } = gameControls(playerCamera, renderer);
+const pacmanControls = {
+	speed: 0.001,
+	direction: new THREE.Vector2(1, 0),
+	rotation: 0
+};
+
+const userControls = {
+	direction: new THREE.Vector2(1, 0),
+};
 
 window.addEventListener("click", (e) => {
 	const raycaster = new Raycaster();
@@ -68,30 +78,42 @@ window.addEventListener("click", (e) => {
 		});
 	}
 });
+window.addEventListener("keydown", (e) => {
+	console.log('pressed')
+	if (e.key === "a") {
+		userControls.direction = new THREE.Vector2(-1, 0);
+	}
+	if (e.key === "d") {
+		userControls.direction = new THREE.Vector2(1, 0);
+	}
+	if (e.key === "w") {
+		userControls.direction = new THREE.Vector2(0, 1);
+	}
+	if (e.key === "s") {
+		userControls.direction = new THREE.Vector2(0, -1);
+	}
+	if (userControls.direction.x === -1 * pacmanControls.direction.x || userControls.direction.y === -1 * pacmanControls.direction.y) {
+		pacmanControls.direction.x = userControls.direction.x;
+		pacmanControls.direction.y = userControls.direction.y;
+		pacmanControls.rotation = Math.asin(pacmanControls.direction.y) || Math.asin(pacmanControls.direction.x) + -Math.PI/2;
+	}
 
-const pacmanControls = {
-	speed: 0.001,
-	direction: new THREE.Vector2(1, 0),
-};
+});
 
-const userControls = {
-	up: false,
-	down: false,
-	left: false,
-	right: false,
-};
 
-function mapColisionChecker(pacmanPosition: THREE.Vector2, map: Vector2[]) {
+
+
+function mapColisionChecker(pacmanPosition: THREE.Vector2, map: PacmanMap ){
 	const pacmanPositionRounded = new THREE.Vector2(
 		Math.round(pacmanPosition.x * 100) / 100,
 		Math.round(pacmanPosition.y * 100) / 100
 	);
-
-	return map.some(
-		(vector2) =>
-			vector2.x === pacmanPositionRounded.x &&
-			vector2.y === pacmanPositionRounded.y
+	const mapColisionPoint = map.find(
+		(point) =>
+			(<Vector2>point[0]).x === pacmanPositionRounded.x &&
+			(<Vector2>point[0]).y === pacmanPositionRounded.y
 	);
+	return mapColisionPoint
 }
 
 //PAC MAN GAME
@@ -156,17 +178,15 @@ const map = [
 	[-0.53, -4.38, {x:[-1,1], y:[1]}], [-4.35, -4.38, {x:[1], y:[1]}],
 
 ];
-
+//Parse to Three.js Vector2
 const mapRounded = map.map((point) => {
-	return new THREE.Vector2(
-		Math.round(point[0] * 100) / 100,
-		Math.round(point[1] * 100) / 100
-	);
+	return [new THREE.Vector2(
+		Math.round((<number>point[0]) * 100) / 100,
+		Math.round((<number>point[1]) * 100) / 100,
+	), point[2]];
 });
 //
 pacmanControls.speed = 0.01;
-pacmanControls.speed = 0;
-
 //gameLoop
 function gameLoop() {
 	//PACMAN
@@ -184,18 +204,27 @@ function gameLoop() {
 	animationMixer?.update(0.02);
 
 	//PACMAN MOVEMENT
-	if (
-		mapColisionChecker(
-			new Vector2(pacman.position.x, pacman.position.y),
-			mapRounded
-		)
-	) {
-		pacmanControls.direction = new THREE.Vector2(0, 1);
-		pacmanControls.speed = 0;
+	const possibleMapColision = mapColisionChecker(
+		new Vector2(pacman.position.x, pacman.position.y),
+		mapRounded
+	)
+	if (possibleMapColision) {
+		if ((<MapPointDirections>possibleMapColision[1]).x.includes(userControls.direction.x) || (<MapPointDirections>possibleMapColision[1]).y.includes(userControls.direction.y)){
+			pacmanControls.direction = userControls.direction;
+			pacmanControls.rotation = Math.asin(pacmanControls.direction.y) || Math.asin(pacmanControls.direction.x) + -Math.PI/2;
+			pacmanControls.speed = 0.01;
+		}
+		else if ((<MapPointDirections>possibleMapColision[1]).x.includes(pacmanControls.direction.x) || (<MapPointDirections>possibleMapColision[1]).y.includes(pacmanControls.direction.y)){
+			
+		}
+		else{
+			pacmanControls.speed = 0;
+		}
 		console.log("map colision");
 	}
 	pacman.position.x += pacmanControls.speed * pacmanControls.direction.x;
 	pacman.position.y += pacmanControls.speed * pacmanControls.direction.y;
+	pacman.rotation.y = pacmanControls.rotation;
 	if (pacman.position.x > 5){
 		pacman.position.x = -5;
 	}
