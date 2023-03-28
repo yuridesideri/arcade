@@ -5,7 +5,7 @@ import { Raycaster, Vector2 } from "three";
 import TWEEN from "@tweenjs/tween.js";
 import { createScreenMesh, loadObjects } from "./objectLoader";
 import * as THREE from "three";
-import { pacmanGame } from "./pacmanGame";
+import { pacmanGame } from "./PacmanGame/pacmanGame";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
