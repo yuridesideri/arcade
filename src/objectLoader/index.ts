@@ -214,6 +214,10 @@ export async function createGhost(
 	return { ghost, mixer };
 }
 
+export function createPebbles(scene: THREE.Scene, pebbleMap: number[][]) {
+	const pebbles = [];
+}
+
 export function loadObjects(scene: THREE.Scene) {
 	loadArcade(gltfLoader, "/models/pac-man-machine-edited/scene.gltf", scene);
 	loadLamp(
