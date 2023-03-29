@@ -1,14 +1,14 @@
-import { MapPointDirections, userControls } from "../types/pacmanGame"
-import * as THREE from "three"
+import { MapPointDirections, userControls } from "../types/pacmanGame";
+import * as THREE from "three";
 import { pacmanStartingPoint } from "../constants/pacmanMap";
 import { mapColisionChecker } from "./colisionCheckers";
 import { Vector2 } from "three";
-import pacmanMap from "../constants/pacmanMap";
+import { pacmanMap } from "../constants/pacmanMap";
 
-
-
-export function PacmanGameLogic(pacman: THREE.Group, userControls: userControls) {
-
+export function PacmanGameLogic(
+	pacman: THREE.Group,
+	userControls: userControls
+) {
 	window.addEventListener("keydown", (e) => {
 		console.log("pressed");
 		if (e.key === "a") {
@@ -35,13 +35,13 @@ export function PacmanGameLogic(pacman: THREE.Group, userControls: userControls)
 		}
 	});
 
-	function resetPacman(){
+	function resetPacman() {
 		pacman.position.x = pacmanStartingPoint.x;
 		pacman.position.y = pacmanStartingPoint.y;
 		pacman.userData.direction = new THREE.Vector2(1, 0);
 		pacman.userData.rotation = 0;
 		pacman.userData.speed = 0.01;
-		setTimeout(() => pacman.userData.speed = 0.01, 10) 
+		setTimeout(() => (pacman.userData.speed = 0.01), 10);
 		pacman.userData.lostLive = false;
 	}
 
@@ -50,11 +50,11 @@ export function PacmanGameLogic(pacman: THREE.Group, userControls: userControls)
 			new Vector2(pacman.position.x, pacman.position.y),
 			pacmanMap
 		);
-			if (pacman.userData.lostLive){
-				resetPacman();
-				userControls.direction = new THREE.Vector2(1, 0);
-				pacman.userData.lives -= 1;
-			}
+		if (pacman.userData.lostLive) {
+			resetPacman();
+			userControls.direction = new THREE.Vector2(1, 0);
+			pacman.userData.lives -= 1;
+		}
 
 		if (possibleMapColision) {
 			if (
@@ -83,8 +83,10 @@ export function PacmanGameLogic(pacman: THREE.Group, userControls: userControls)
 			}
 			console.log("map colision");
 		}
-		pacman.position.x += pacman.userData.speed * pacman.userData.direction.x;
-		pacman.position.y += pacman.userData.speed * pacman.userData.direction.y;
+		pacman.position.x +=
+			pacman.userData.speed * pacman.userData.direction.x;
+		pacman.position.y +=
+			pacman.userData.speed * pacman.userData.direction.y;
 		pacman.rotation.y = pacman.userData.rotation;
 		if (pacman.position.x > 5) {
 			pacman.position.x = -5;
