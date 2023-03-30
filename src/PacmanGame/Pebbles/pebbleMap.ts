@@ -1,7 +1,7 @@
 import { pacmanMap } from "../../constants/pacmanMap";
 import * as THREE from "three";
 
-export function createPebbleMap(scene: THREE.Scene) {
+export function createPebbleObjects(scene: THREE.Scene) {
 	const pacmanMapCopy = [...pacmanMap];
 
     //ADDED MANUAL PEBBLES
@@ -46,9 +46,6 @@ export function createPebbleMap(scene: THREE.Scene) {
 		}
 		if (point[2].x.includes(1)) {
 			if (point[0] === 2.6 && point[1] === 0.35) {
-				console.log(point);
-				console.log(pauseNextPebbleAdd);
-				console.log("falso ainda");
 			}
 			pauseNextPebbleAdd = false;
 		} else {
@@ -74,12 +71,24 @@ export function createPebbleMap(scene: THREE.Scene) {
 			pauseNextPebbleAdd = true;
 		}
 	}
+	const pebbleObjects: THREE.Mesh[] = [];
     
 	for (let i = 0; i < pebbleMap.length; i++) {
 		const material = new THREE.MeshBasicMaterial({ color: "orange" });
 		const pebbleGeometry = new THREE.CircleGeometry(0.05, 32, 32);
 		const pebble = new THREE.Mesh(pebbleGeometry, material);
+		pebble.name = "pebble" + i;
 		pebble.position.set(pebbleMap[i][0], pebbleMap[i][1], 0.001);
 		scene.add(pebble);
+		pebbleObjects.push(pebble)
 	}
+
+	function updatePebble(pebble: THREE.Mesh, pebbleIndex: number) {
+		pebbleObjects.splice(pebbleIndex, 1);
+		scene.remove(pebble);
+		pebble.geometry.dispose();
+		(pebble.material as THREE.Material)?.dispose();
+	}
+
+	return {pebbleObjects, updatePebble};
 }

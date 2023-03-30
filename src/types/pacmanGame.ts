@@ -12,3 +12,14 @@ export type userControls = {
 }
 
 export type GhostNames = "blinky" | "pinky" | "inky" | "clyde";
+
+export type PacmanType = {
+    direction: THREE.Vector2;
+    speed: number;
+    rotation: number;
+    lives: number;
+    poweredUp: boolean;
+    poweredUpTime: number;
+    lostLive: boolean;
+    score: number;
+}

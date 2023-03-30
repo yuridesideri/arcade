@@ -20,7 +20,6 @@ const pacManDevCamera = new THREE.PerspectiveCamera(
 );
 pacManDevCamera.position.set(0, 50, 25);
 pacManDevCamera.rotateX(-0.45);
-
 loadObjects(scene);
 sceneResizer(playerCamera, renderer);
 const { cameraDebugger } = gameControls(playerCamera, renderer);

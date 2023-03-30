@@ -2,15 +2,19 @@ import * as THREE from "three";
 import { createGhost, createPacman } from "../objectLoader";
 import { pacmanStartingPoint } from "../constants/pacmanMap";
 import { GhostLogic } from "./ghostLogic";
-import { PacManGhostColisionChecker } from "./colisionCheckers";
+import { PacManGhostColisionChecker, PacManPebbleColisionChecker } from "./colisionCheckers";
 import { PacmanGameLogic } from "./pacmanLogic";
-import { createPebbleMap } from "./Pebbles/pebbleMap";
+import { createPebbleObjects } from "./Pebbles/pebbleMap";
+import { PacmanType } from "../types/pacmanGame";
 
 
 export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
+	//CONTROLS
+	const userControls = {
+		direction: new THREE.Vector2(1, 0),
+	};
 	//SCENE
 	const scene = new THREE.Scene();
-	createPebbleMap(scene);
 	scene.background = new THREE.Color("black");
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 	camera.position.set(0, 0, 9.5);
@@ -37,13 +41,17 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 		scene,
 		pacmanStartingPoint
 	);
-	pacman.userData.direction = new THREE.Vector2(1, 0);
-	pacman.userData.speed = 0.01;
-	pacman.userData.rotation = 0;
-	pacman.userData.lives = 3;
-	pacman.userData.poweredUp = false;
-	pacman.userData.poweredUpTime = 0;
-	pacman.userData.lostLive = false;
+	pacman.userData = {
+		direction: new THREE.Vector2(1, 0),
+		speed: 0.01,
+		rotation: 0,
+		lives: 3,
+		poweredUp: false,
+		poweredUpTime: 0,
+		lostLive: false,
+		score: 0,
+	} as PacmanType;
+
 	const { ghost: redGhost, mixer: redGhostMixer } = await createGhost(
 		scene,
 		"/models/ghosts/ghost-red-animated.gltf",
@@ -65,10 +73,8 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 		new THREE.Vector2(0.8, 0.35)
 	);
 
-	const userControls = {
-		direction: new THREE.Vector2(1, 0),
-	};
-
+	const {pebbleObjects, updatePebble} = createPebbleObjects(scene);
+	console.log(pebbleObjects.length)
 	const updatePacman = PacmanGameLogic(pacman, userControls);
 	const updateBlinky = GhostLogic(redGhost, 'blinky');
 	const updatePinky = GhostLogic(pinkGhost, 'pinky');
@@ -93,6 +99,12 @@ export async function pacmanGame(mainRenderer: THREE.WebGLRenderer) {
 		PacManGhostColisionChecker(pacman, blueGhost);
 		PacManGhostColisionChecker(pacman, yellowGhost);
 		PacManGhostColisionChecker(pacman, pinkGhost);
+		if (pebbleObjects.length === 0){
+			console.log('You won!');
+		}
+		pebbleObjects.forEach((pebble, index) => {
+			PacManPebbleColisionChecker(pacman, pebble, updatePebble, index);
+		})
 	}
 
 	return pacmanGameLoop;
