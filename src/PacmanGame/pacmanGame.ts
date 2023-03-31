@@ -9,8 +9,10 @@ import {
 import { PacmanGameLogic } from "./pacmanLogic";
 import { createPebbleObjects } from "./Pebbles/pebbleMap";
 import { PacmanType } from "../types/pacmanGame";
+import { Screen } from "../main";
 export async function pacmanGame(
 	mainRenderer: THREE.WebGLRenderer,
+	startingScore?: number,
 ) {
 	//CONTROLS
 	const userControls = {
@@ -53,9 +55,14 @@ export async function pacmanGame(
 		poweredUp: false,
 		poweredUpTime: 0,
 		lostLive: false,
-		score: 0,
+		score: startingScore || 0,
 	} as PacmanType;
 
+	//RETURN FUNCTIONS
+	let pacmanGameLoopReturn = pacmanGameLoop;
+	let pacmanGameCleanUpReturn = pacmanGameCleanUp;
+
+	//GHOSTS
 	const { ghost: redGhost, mixer: redGhostMixer } = await createGhost(
 		scene,
 		"/models/ghosts/ghost-red-animated.gltf",
@@ -85,6 +92,20 @@ export async function pacmanGame(
 	const updateInky = GhostLogic(blueGhost, "inky");
 	const updateClyde = GhostLogic(yellowGhost, "clyde");
 
+	async function endGame() {
+		Screen.gameStatus = "Options";
+		//TODO:
+		//Save score
+		//Send score to server
+		pacmanGameCleanUp();
+	}
+	async function restartGame() {
+		pacmanGameCleanUp();
+		const newGame = await pacmanGame(mainRenderer, pacman.userData.score);
+		pacmanGameLoopReturn = newGame.pacmanGameLoop;
+		pacmanGameCleanUpReturn = newGame.pacmanGameCleanUp;
+	}
+
 	function pacmanGameLoop() {
 		mainRenderer.render(scene, camera);
 		pacmanMixer?.update(0.02);
@@ -103,8 +124,13 @@ export async function pacmanGame(
 		PacManGhostColisionChecker(pacman, blueGhost);
 		PacManGhostColisionChecker(pacman, yellowGhost);
 		PacManGhostColisionChecker(pacman, pinkGhost);
+
+		if(pacman.userData.lives === 0){
+			endGame();
+		}
 		if (pebbleObjects.length === 0) {
 			console.log("You won!");
+			restartGame();
 		}
 		pebbleObjects.forEach((pebble, index) => {
 			PacManPebbleColisionChecker(pacman, pebble, updatePebble, index);
@@ -128,5 +154,6 @@ export async function pacmanGame(
 		removeEventListener();
 	}
 
-	return {pacmanGameLoop, pacmanGameCleanUp};
+
+	return {pacmanGameLoop: pacmanGameLoopReturn, pacmanGameCleanUp: pacmanGameCleanUpReturn};
 }

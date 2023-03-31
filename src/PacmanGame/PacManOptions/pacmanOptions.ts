@@ -1,6 +1,6 @@
 import { ScreenTypes } from "../../types/pacmanGame";
 import "./styles.css";
-export function GameOptions(): HTMLElement {
+export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	const HTMLElement = document.createElement("div");
 	HTMLElement.className = "gameOptionsBody";
 

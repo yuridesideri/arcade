@@ -21,6 +21,9 @@ const screenMesh = createScreenMesh(scene);
 const screenData = screenMesh.userData;
 export const Screen: ScreenTypes = { gameStatus: "Options" };
 
+//USER
+// const score = localStorage.getItem("score") || localStorage.setItem("score", "0");
+
 //3d css renderer
 const css3DRenderer = new CSS3DRenderer();
 app!.appendChild(css3DRenderer.domElement);
@@ -28,7 +31,7 @@ css3DRenderer.setSize(window.innerWidth, window.innerHeight);
 css3DRenderer.domElement.style.position = "absolute";
 css3DRenderer.domElement.style.top = "0";
 css3DRenderer.domElement.style.pointerEvents = "none";
-const HTMLObject = new CSS3DObject(GameOptions());
+const HTMLObject = new CSS3DObject(GameOptions(startGame));
 HTMLObject.scale.set(0.1, 0.1, 0.1);
 screenMesh.add(HTMLObject);
 
@@ -101,11 +104,7 @@ async function startGame() {
 	pacmanGameCleanUp = newGame.pacmanGameCleanUp;
 }
 
-async function endGame() {
-	Screen.gameStatus = "Options";
-	pacmanGameCleanUp && pacmanGameCleanUp();
-	HTMLObject.element = GameOptions();
-}
+
 
 //gameLoop
 function gameLoop() {
