@@ -9,7 +9,7 @@ export function PacmanGameLogic(
 	pacman: THREE.Group,
 	userControls: userControls
 ) {
-	window.addEventListener("keydown", (e) => {
+	const keydownEventHandler = (e:KeyboardEvent) => {
 		console.log("pressed");
 		if (e.key === "a") {
 			userControls.direction = new THREE.Vector2(-1, 0);
@@ -33,7 +33,12 @@ export function PacmanGameLogic(
 				Math.asin(pacman.userData.direction.y) ||
 				Math.asin(pacman.userData.direction.x) + -Math.PI / 2;
 		}
-	});
+	}
+	window.addEventListener("keydown", keydownEventHandler);
+
+	function removeEventListener() {
+		window.removeEventListener("keydown", keydownEventHandler);
+	}
 
 	function resetPacman() {
 		pacman.position.x = pacmanStartingPoint.x;
@@ -95,5 +100,5 @@ export function PacmanGameLogic(
 		}
 	}
 
-	return updatePacman;
+	return {updatePacman, removeEventListener};
 }

@@ -1,14 +1,69 @@
+button{
+	border: none;
+	border-radius: 10%;
+}
+
 .gameOptionsBody {
-	width: 200px;
-	height: 200px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border-radius: 10px;
+	opacity: 0.9;
 }
 .working-div {
-    width: 75.4%;
-    height: 97%;
-    background-color: blue;
+    width: 150.8px;
+    height: 194px;
     transform: translateX(-0.2%);
+}
+.options-screen{
+	width: 100%;
+    height: 100%;
+	display: flex;
+	align-items: center;
+}
+.buttons-container{
+	height: 40%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.play-button {
+	width: 30%;
+	height: 20px;
+	margin-right: 10%;
+	background-color: yellow;
+	opacity: 0.8;
+	font-family: 'VT323', monospace;
+	font-size: medium;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	border-radius: 10%;
+}
+
+.profiles-button{
+	width: 30%;
+	margin-left: 10%;
+	height: 20px;
+	background-color: yellow;
+	font-family: 'VT323', monospace;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: medium;
+
+}
+
+.leaderboards-button{
+	height: 20px;
+	width: 80%;
+	background-color: yellow;
+	font-family: 'VT323', monospace;
+	font-size: large;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

@@ -23,3 +23,5 @@ export type PacmanType = {
     lostLive: boolean;
     score: number;
 }
+
+export type ScreenTypes = {gameStatus: "Options"|"Game"|"Profile"|"Leaderboards"};

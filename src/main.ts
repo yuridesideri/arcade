@@ -11,6 +11,7 @@ import {
 	CSS3DRenderer,
 } from "three/examples/jsm/renderers/CSS3DRenderer";
 import { GameOptions } from "./PacmanGame/PacManOptions/pacmanOptions";
+import { ScreenTypes } from "./types/pacmanGame";
 // import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -18,6 +19,7 @@ const app = document.querySelector<HTMLDivElement>("#app");
 const { scene, camera: playerCamera, renderer } = createWorld(app!);
 const screenMesh = createScreenMesh(scene);
 const screenData = screenMesh.userData;
+export const Screen: ScreenTypes = { gameStatus: "Options" };
 
 //3d css renderer
 const css3DRenderer = new CSS3DRenderer();
@@ -89,7 +91,22 @@ window.addEventListener("click", (e) => {
 	}
 });
 
-const pacmanGameLoop = await pacmanGame(renderer);
+let pacmanGameLoop: () => void, pacmanGameCleanUp: () => void;
+
+async function startGame() {
+	Screen.gameStatus = "Game";
+	pacmanGameCleanUp && pacmanGameCleanUp();
+	const newGame = await pacmanGame(renderer);
+	pacmanGameLoop = newGame.pacmanGameLoop;
+	pacmanGameCleanUp = newGame.pacmanGameCleanUp;
+}
+
+async function endGame() {
+	Screen.gameStatus = "Options";
+	pacmanGameCleanUp && pacmanGameCleanUp();
+	HTMLObject.element = GameOptions();
+}
+
 //gameLoop
 function gameLoop() {
 	//PRIMARY
@@ -98,10 +115,11 @@ function gameLoop() {
 	cameraDebugger();
 
 	//PACMAN GAME
+	if (Screen.gameStatus === "Game"){
 	renderer.setRenderTarget(screenData.renderTarget);
 	pacmanGameLoop();
 	renderer.setRenderTarget(null);
-
+	}
 	//CSS RENDERER
 	css3DRenderer.render(scene, pacManDevCamera);
 

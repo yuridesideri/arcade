@@ -79,7 +79,7 @@ export async function pacmanGame(
 
 	const { pebbleObjects, updatePebble } = createPebbleObjects(scene);
 	console.log(pebbleObjects.length);
-	const updatePacman = PacmanGameLogic(pacman, userControls);
+	const {updatePacman, removeEventListener} = PacmanGameLogic(pacman, userControls);
 	const updateBlinky = GhostLogic(redGhost, "blinky");
 	const updatePinky = GhostLogic(pinkGhost, "pinky");
 	const updateInky = GhostLogic(blueGhost, "inky");
@@ -111,5 +111,22 @@ export async function pacmanGame(
 		});
 	}
 
-	return pacmanGameLoop;
+	function pacmanGameCleanUp(){
+		scene.remove(plane);
+		scene.remove(pacman);
+		scene.remove(redGhost);
+		scene.remove(blueGhost);
+		scene.remove(yellowGhost);
+		scene.remove(pinkGhost);
+		scene.traverse((object) => {
+			if (object instanceof THREE.Mesh) {
+				object.geometry.dispose();
+				object.material?.map.dispose();
+				object.material.dispose();
+			}
+		})
+		removeEventListener();
+	}
+
+	return {pacmanGameLoop, pacmanGameCleanUp};
 }
