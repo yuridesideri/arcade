@@ -10,8 +10,13 @@ import { PacmanGameLogic } from "./pacmanLogic";
 import { createPebbleObjects } from "./Pebbles/pebbleMap";
 import { PacmanType } from "../types/pacmanGame";
 import { Screen } from "../main";
+import {
+	CSS3DObject,
+	CSS3DRenderer,
+} from "three/examples/jsm/renderers/CSS3DRenderer";
 export async function pacmanGame(
 	mainRenderer: THREE.WebGLRenderer,
+	CSS3DObject: CSS3DObject,
 	startingScore?: number,
 ) {
 	//CONTROLS
@@ -84,7 +89,7 @@ export async function pacmanGame(
 		new THREE.Vector2(0.8, 0.35)
 	);
 
-	const { pebbleObjects, updatePebble } = createPebbleObjects(scene);
+	const { pebbleObjects, updatePebble, cleanUpPebbles } = createPebbleObjects(scene);
 	console.log(pebbleObjects.length);
 	const {updatePacman, removeEventListener} = PacmanGameLogic(pacman, userControls);
 	const updateBlinky = GhostLogic(redGhost, "blinky");
@@ -92,16 +97,20 @@ export async function pacmanGame(
 	const updateInky = GhostLogic(blueGhost, "inky");
 	const updateClyde = GhostLogic(yellowGhost, "clyde");
 
-	async function endGame() {
+	console.log(pacman);
+
+	function endGame() {
 		Screen.gameStatus = "Options";
+		console.log('game ended')
 		//TODO:
 		//Save score
 		//Send score to server
 		pacmanGameCleanUp();
+		CSS3DObject.element.classList.remove("hidden");
 	}
 	async function restartGame() {
 		pacmanGameCleanUp();
-		const newGame = await pacmanGame(mainRenderer, pacman.userData.score);
+		const newGame = await pacmanGame(mainRenderer,CSS3DObject, pacman.userData.score);
 		pacmanGameLoopReturn = newGame.pacmanGameLoop;
 		pacmanGameCleanUpReturn = newGame.pacmanGameCleanUp;
 	}
@@ -125,9 +134,7 @@ export async function pacmanGame(
 		PacManGhostColisionChecker(pacman, yellowGhost);
 		PacManGhostColisionChecker(pacman, pinkGhost);
 
-		if(pacman.userData.lives === 0){
-			endGame();
-		}
+
 		if (pebbleObjects.length === 0) {
 			console.log("You won!");
 			restartGame();
@@ -135,6 +142,11 @@ export async function pacmanGame(
 		pebbleObjects.forEach((pebble, index) => {
 			PacManPebbleColisionChecker(pacman, pebble, updatePebble, index);
 		});
+		if(pacman.userData.lives === 2){
+			pacman.userData.lives = 3; //Handles fast refresh bug
+			endGame();
+			mainRenderer.render(scene, camera);
+		}
 	}
 
 	function pacmanGameCleanUp(){
@@ -147,10 +159,10 @@ export async function pacmanGame(
 		scene.traverse((object) => {
 			if (object instanceof THREE.Mesh) {
 				object.geometry.dispose();
-				object.material?.map.dispose();
 				object.material.dispose();
 			}
 		})
+		cleanUpPebbles();
 		removeEventListener();
 	}
 

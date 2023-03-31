@@ -98,29 +98,30 @@ let pacmanGameLoop: () => void, pacmanGameCleanUp: () => void;
 
 async function startGame() {
 	Screen.gameStatus = "Game";
+	console.log(Screen.gameStatus)
 	pacmanGameCleanUp && pacmanGameCleanUp();
-	const newGame = await pacmanGame(renderer);
+	const newGame = await pacmanGame(renderer, HTMLObject);
 	pacmanGameLoop = newGame.pacmanGameLoop;
 	pacmanGameCleanUp = newGame.pacmanGameCleanUp;
 }
 
-
+setInterval(()=> console.log(Screen.gameStatus), 1000)
 
 //gameLoop
 function gameLoop() {
 	//PRIMARY
-	renderer.render(scene, pacManDevCamera);
+	renderer.render(scene, playerCamera);
 	TWEEN.update();
 	cameraDebugger();
 
 	//PACMAN GAME
-	if (Screen.gameStatus === "Game"){
 	renderer.setRenderTarget(screenData.renderTarget);
-	pacmanGameLoop();
-	renderer.setRenderTarget(null);
+	if (Screen.gameStatus === "Game" && pacmanGameLoop) {
+		pacmanGameLoop();
 	}
+	renderer.setRenderTarget(null);
 	//CSS RENDERER
-	css3DRenderer.render(scene, pacManDevCamera);
+	css3DRenderer.render(scene, playerCamera);
 
 	requestAnimationFrame(gameLoop);
 }

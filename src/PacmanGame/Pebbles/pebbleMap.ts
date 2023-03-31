@@ -90,5 +90,14 @@ export function createPebbleObjects(scene: THREE.Scene) {
 		(pebble.material as THREE.Material)?.dispose();
 	}
 
-	return {pebbleObjects, updatePebble};
+	function cleanUpPebbles() {
+		for (let i = 0; i < pebbleObjects.length; i++) {
+			const pebble = pebbleObjects[i];
+			scene.remove(pebble);
+			pebble.geometry.dispose();
+			(pebble.material as THREE.Material)?.dispose();
+		}
+	}
+
+	return {pebbleObjects, updatePebble, cleanUpPebbles};
 }

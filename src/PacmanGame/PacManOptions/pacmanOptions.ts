@@ -1,9 +1,9 @@
 import { ScreenTypes } from "../../types/pacmanGame";
+import { Screen } from "../../main";
 import "./styles.css";
 export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	const HTMLElement = document.createElement("div");
-	HTMLElement.className = "gameOptionsBody";
-
+	
 	const workingDiv = document.createElement("div");
 	workingDiv.className = "working-div";
 	HTMLElement.appendChild(workingDiv);
@@ -17,9 +17,21 @@ export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	optionsScreeen.appendChild(buttonsContainer);
 
 	//OPTIONS SCREEN ELEMENTS
+	const logo = document.createElement("div");
+	logo.className = "logo";
+	optionsScreeen.appendChild(logo);
+	const image = document.createElement("img");
+	image.src = "./pacman-logo.png";
+	image.style.width = "100%";
+	logo.appendChild(image);
+
 	const playButton = document.createElement("button");
 	playButton.className = "play-button";
 	playButton.innerText = "Play";
+	playButton.onclick = async (e) => {
+		HTMLElement.classList.add("hidden");
+		await startGame();
+	};
 	buttonsContainer.appendChild(playButton);
 
 	const profileButton = document.createElement("button");
@@ -31,8 +43,6 @@ export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	leaderBoardsButton.className = "leaderboards-button";
 	leaderBoardsButton.innerText = "Leaderboards";
 	buttonsContainer.appendChild(leaderBoardsButton);
-
-	
 
 	return HTMLElement;
 }
