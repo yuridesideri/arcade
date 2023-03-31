@@ -11,7 +11,10 @@ async function loadModel(
 	position?: THREE.Vector3
 ) {
 	const modelPromise = loader.loadAsync(path, function (xhr) {
-		console.log((xhr.loaded / xhr.total) * 100 + "% loaded" + " "  + path.split("/").pop());
+		const pathName = path.split("/");
+		const folder = pathName[pathName.length - 2];
+		const fileName = pathName[pathName.length - 1];
+		console.log((xhr.loaded / xhr.total) * 100 + "% loaded" + " "  + folder + " " + fileName);
 	});
 	const model = await modelPromise;
 	if (scale) model.scene.scale.set(scale, scale, scale);
@@ -27,31 +30,25 @@ async function loadModel(
 }
 
 const gltfLoader = new GLTFLoader();
-export function loadArcade(
-	model: GLTFLoader,
-	path: string,
+export async function loadArcade(
 	scene: THREE.Scene
 ) {
-	model.load(
-		path,
-		function (gltf) {
-			const model = gltf.scene;
-			scene.add(model);
-			model.traverse((node) => {
-				if ((<THREE.Mesh>node).isMesh) {
-					node.castShadow = true;
-					node.receiveShadow = true;
-				}
-			});
-			gltf.animations;
-		},
-		function (xhr) {
-			console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-		},
-		function (error) {
-			console.log("An error happened: ", error);
-		}
+
+	function traverseFunction(node: THREE.Mesh) {
+		node.castShadow = true;
+		node.receiveShadow = true;
+	}
+
+	const arcade = await loadModel(
+		gltfLoader,
+		"/models/pac-man-machine-edited/scene.gltf",
+		scene,
+		traverseFunction,
+		1,
+		new THREE.Vector3(0, 0, 0)
 	);
+
+	return arcade;
 }
 
 export function loadLamp(
@@ -219,7 +216,6 @@ export function createPebbles(scene: THREE.Scene, pebbleMap: number[][]) {
 }
 
 export function loadObjects(scene: THREE.Scene) {
-	loadArcade(gltfLoader, "/models/pac-man-machine-edited/scene.gltf", scene);
 	loadLamp(
 		gltfLoader,
 		"/models/ceiling_lamp_version_01/scene.gltf",

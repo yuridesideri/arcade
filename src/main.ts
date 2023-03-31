@@ -3,15 +3,36 @@ import { createWorld, sceneResizer } from "./world";
 import { gameControls } from "./controls";
 import { Raycaster, Vector2 } from "three";
 import TWEEN from "@tweenjs/tween.js";
-import { createScreenMesh, loadObjects } from "./objectLoader";
+import { createScreenMesh, loadArcade, loadObjects } from "./objectLoader";
 import * as THREE from "three";
 import { pacmanGame } from "./PacmanGame/pacmanGame";
+import {
+	CSS3DObject,
+	CSS3DRenderer,
+} from "three/examples/jsm/renderers/CSS3DRenderer";
+import { GameOptions } from "./PacmanGame/PacManOptions/pacmanOptions";
+// import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
 const { scene, camera: playerCamera, renderer } = createWorld(app!);
-const { userData:screenData } = createScreenMesh(scene);
+const screenMesh = createScreenMesh(scene);
+const screenData = screenMesh.userData;
 
+//3d css renderer
+const css3DRenderer = new CSS3DRenderer();
+app!.appendChild(css3DRenderer.domElement);
+css3DRenderer.setSize(window.innerWidth, window.innerHeight);
+css3DRenderer.domElement.style.position = "absolute";
+css3DRenderer.domElement.style.top = "0";
+css3DRenderer.domElement.style.pointerEvents = "none";
+const HTMLObject = new CSS3DObject(GameOptions());
+HTMLObject.scale.set(0.1, 0.1, 0.1);
+screenMesh.add(HTMLObject);
+
+//Testing
+
+//
 const pacManDevCamera = new THREE.PerspectiveCamera(
 	75,
 	window.innerWidth / window.innerHeight,
@@ -21,7 +42,8 @@ const pacManDevCamera = new THREE.PerspectiveCamera(
 pacManDevCamera.position.set(0, 50, 25);
 pacManDevCamera.rotateX(-0.45);
 loadObjects(scene);
-sceneResizer(playerCamera, renderer);
+const arcade = await loadArcade(scene);
+sceneResizer(playerCamera, renderer, css3DRenderer);
 const { cameraDebugger } = gameControls(playerCamera, renderer);
 
 window.addEventListener("click", (e) => {
@@ -74,11 +96,14 @@ function gameLoop() {
 	renderer.render(scene, pacManDevCamera);
 	TWEEN.update();
 	cameraDebugger();
-	
-	//PACMAN GAME	
+
+	//PACMAN GAME
 	renderer.setRenderTarget(screenData.renderTarget);
 	pacmanGameLoop();
 	renderer.setRenderTarget(null);
+
+	//CSS RENDERER
+	css3DRenderer.render(scene, pacManDevCamera);
 
 	requestAnimationFrame(gameLoop);
 }

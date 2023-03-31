@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer";
 
 export function createWorld(parentElement: HTMLElement): {
 	scene: THREE.Scene;
@@ -23,6 +24,9 @@ export function createWorld(parentElement: HTMLElement): {
 	const renderer = new THREE.WebGLRenderer();
 	renderer.setClearColor(/* "#353535" */"black");
 	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.domElement.style.position = "absolute";
+	renderer.domElement.style.top = "0";
+	renderer.domElement.style.zIndex = "-1";
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 	renderer.outputEncoding = THREE.sRGBEncoding;
@@ -52,11 +56,13 @@ export function createWorld(parentElement: HTMLElement): {
 
 
 
-export function sceneResizer(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer){
+export function sceneResizer(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, css3DRenderer: CSS3DRenderer) {
 	const onWindowResize = () => {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight);
+		css3DRenderer.setSize(window.innerWidth, window.innerHeight);
 	};
 	window.addEventListener('resize', onWindowResize, false);
+
 }

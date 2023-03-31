@@ -1,0 +1,14 @@
+.gameOptionsBody {
+	width: 200px;
+	height: 200px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+}
+.working-div {
+    width: 75.4%;
+    height: 97%;
+    background-color: blue;
+    transform: translateX(-0.2%);
+}

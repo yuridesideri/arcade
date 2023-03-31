@@ -81,7 +81,6 @@ export function PacmanGameLogic(
 			} else {
 				pacman.userData.speed = 0;
 			}
-			console.log("map colision");
 		}
 		pacman.position.x +=
 			pacman.userData.speed * pacman.userData.direction.x;
