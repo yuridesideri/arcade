@@ -10,7 +10,7 @@ import {
 	CSS3DObject,
 	CSS3DRenderer,
 } from "three/examples/jsm/renderers/CSS3DRenderer";
-import { GameOptions } from "./PacmanGame/PacManOptions/pacmanOptions";
+import { GameOptions } from "./PacmanGame/Screen/PacManOptions/pacmanOptions";
 import { ScreenTypes } from "./types/pacmanGame";
 // import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 
@@ -105,12 +105,10 @@ async function startGame() {
 	pacmanGameCleanUp = newGame.pacmanGameCleanUp;
 }
 
-setInterval(()=> console.log(Screen.gameStatus), 1000)
-
 //gameLoop
 function gameLoop() {
 	//PRIMARY
-	renderer.render(scene, playerCamera);
+	renderer.render(scene, pacManDevCamera);
 	TWEEN.update();
 	cameraDebugger();
 
@@ -121,7 +119,7 @@ function gameLoop() {
 	}
 	renderer.setRenderTarget(null);
 	//CSS RENDERER
-	css3DRenderer.render(scene, playerCamera);
+	css3DRenderer.render(scene, pacManDevCamera);
 
 	requestAnimationFrame(gameLoop);
 }

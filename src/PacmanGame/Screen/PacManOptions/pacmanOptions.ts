@@ -1,6 +1,5 @@
-import { ScreenTypes } from "../../types/pacmanGame";
-import { Screen } from "../../main";
 import "./styles.css";
+import { ProfileScreen } from "../ProfileScreen/ProfileScreen";
 export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	const HTMLElement = document.createElement("div");
 	
@@ -12,11 +11,16 @@ export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	optionsScreeen.className = "options-screen";
 	workingDiv.appendChild(optionsScreeen);
 
+	const profileScreen = ProfileScreen(optionsScreeen);
+	workingDiv.appendChild(profileScreen);
+	profileScreen.classList.add("hidden");
+
+	
+	//OPTIONS SCREEN ELEMENTS
 	const buttonsContainer = document.createElement("div");
 	buttonsContainer.className = "buttons-container";
 	optionsScreeen.appendChild(buttonsContainer);
 
-	//OPTIONS SCREEN ELEMENTS
 	const logo = document.createElement("div");
 	logo.className = "logo";
 	optionsScreeen.appendChild(logo);
@@ -37,12 +41,19 @@ export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	const profileButton = document.createElement("button");
 	profileButton.className = "profiles-button";
 	profileButton.innerText = "Profile";
+	profileButton.onclick = (e) => {
+		optionsScreeen.classList.add("hidden");
+		profileScreen.classList.remove("hidden");
+	};
 	buttonsContainer.appendChild(profileButton);
 
 	const leaderBoardsButton = document.createElement("button");
 	leaderBoardsButton.className = "leaderboards-button";
 	leaderBoardsButton.innerText = "Leaderboards";
 	buttonsContainer.appendChild(leaderBoardsButton);
+
+
+	
 
 	return HTMLElement;
 }
