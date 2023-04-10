@@ -12,7 +12,6 @@ import { PacmanType } from "../types/pacmanGame";
 import { Screen } from "../main";
 import {
 	CSS3DObject,
-	CSS3DRenderer,
 } from "three/examples/jsm/renderers/CSS3DRenderer";
 export async function pacmanGame(
 	mainRenderer: THREE.WebGLRenderer,
@@ -109,6 +108,7 @@ export async function pacmanGame(
 		CSS3DObject.element.classList.remove("hidden");
 	}
 	async function restartGame() {
+		//TODO: BUG - PACMAN RESTARTING INFINIETELY
 		pacmanGameCleanUp();
 		const newGame = await pacmanGame(mainRenderer,CSS3DObject, pacman.userData.score);
 		pacmanGameLoopReturn = newGame.pacmanGameLoop;
@@ -142,7 +142,7 @@ export async function pacmanGame(
 		pebbleObjects.forEach((pebble, index) => {
 			PacManPebbleColisionChecker(pacman, pebble, updatePebble, index);
 		});
-		if(pacman.userData.lives === 2){
+		if(pacman.userData.lives === 2){ //Has to be changed to 3
 			pacman.userData.lives = 3; //Handles fast refresh bug
 			endGame();
 			mainRenderer.render(scene, camera);
