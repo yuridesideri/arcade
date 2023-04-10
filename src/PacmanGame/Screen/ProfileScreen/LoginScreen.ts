@@ -55,7 +55,8 @@ export function LoginScreen(): HTMLElement {
 			password,
 			email,
 		}).then((res) => {
-                localStorage.setItem("userToken", res.data.token);
+
+                localStorage.setItem("userToken", res.data);
                 returnFunction();
         }).catch((err) => {
             alert("Something went wrong!");
