@@ -25,8 +25,7 @@ export const Screen: ScreenTypes = { gameStatus: "Options" };
 // const score = localStorage.getItem("score") || localStorage.setItem("score", "0");
 
 //3d css renderer
-const css3DRenderer = new CSS3DRenderer();
-app!.appendChild(css3DRenderer.domElement);
+const css3DRenderer = new CSS3DRenderer({element: app!});
 css3DRenderer.setSize(window.innerWidth, window.innerHeight);
 css3DRenderer.domElement.style.position = "absolute";
 css3DRenderer.domElement.style.top = "0";

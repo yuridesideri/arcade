@@ -61,6 +61,7 @@ export function sceneResizer(camera: THREE.PerspectiveCamera, renderer: THREE.We
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(window.devicePixelRatio);
 		css3DRenderer.setSize(window.innerWidth, window.innerHeight);
 	};
 	window.addEventListener('resize', onWindowResize, false);
