@@ -28,7 +28,7 @@ export async function pacmanGame(
 	const scene = new THREE.Scene();
 	scene.background = new THREE.Color("black");
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-	camera.position.set(0, 0, 9.5);
+	camera.position.set(0, 0.5, 9.5);
 	const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 	scene.add(ambientLight);
 	const texture = new THREE.TextureLoader().load(

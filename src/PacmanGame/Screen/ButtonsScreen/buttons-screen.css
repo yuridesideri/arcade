@@ -179,7 +179,7 @@ h1 {
 	display: relative;
 	height: 85%;
 	width: 90%;
-
+	overflow-y: hidden;
 }
 .leaderboards-page{
 	display: flex;
