@@ -72,7 +72,9 @@ h1 {
 	width: 100%;
 	height: 100%;
 	display: flex;
-	justify-content: center;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: column;
 	box-sizing: border-box;
 	padding: 5px;
 }
@@ -93,10 +95,57 @@ h1 {
     margin-left: 8px;
 }
 
+.games-title{
+	margin-top: 10px;
+	width: 100%;
+	color:rgb(201, 201, 12);
+}
+
 .logout-button {
 	position: fixed;
 	top: 10px;
 	right: 10px;
+}
+
+.user-games{
+	width: 100%;
+	height: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	overflow-y: hidden;
+}
+
+.game-component{
+	width: 100%;
+	font-size: 10px;
+	display: flex;
+	margin-bottom: 5px;
+}
+.game-component h2{
+	color: yellow;
+}
+
+.game-info{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.left-game-info{
+	display: flex;
+}
+
+.game-info-header-left{
+	display: flex;
+	flex-direction: column;
+	margin-left: 5px;
+}
+
+.game-info-body{
+	display: flex;
+	flex-direction: column;
 }
 
 .hidden {

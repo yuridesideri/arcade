@@ -36,7 +36,7 @@ export function LoginScreen(): HTMLElement {
     const returnArrow = document.createElement("button");
     returnArrow.className = "return-arrow";
     returnArrow.innerHTML = `<ion-icon name="arrow-back-outline"></ion-icon>`;
-    returnArrow.onclick = (e) => {
+    returnArrow.onclick = (e?) => {
         const parentElement = LoginScreenElement.parentElement;
         if (parentElement) {
             parentElement.appendChild(ProfileScreen());

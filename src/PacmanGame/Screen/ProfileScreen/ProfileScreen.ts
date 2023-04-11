@@ -2,6 +2,7 @@ import "./profile-screen.css";
 import { LoginScreen } from "./LoginScreen";
 import { SignUpScreen } from "./SignupScreen";
 import axios from "axios";
+import { GameComponent } from "../Components";
 
 export function ProfileScreen(): HTMLElement {
 	const ProfileScreenElement = document.createElement("div");
@@ -30,6 +31,7 @@ export function ProfileScreen(): HTMLElement {
 					username: string;
 					games: [];
 				};
+				 console.log(profileInfo)
 				const profileSections = document.createElement("div");
 				profileSections.className = "profile-section";
 				profileSections.innerHTML = `
@@ -45,10 +47,12 @@ export function ProfileScreen(): HTMLElement {
                                 <h1>${profileInfo.username}</h1>
                             </div>
                         </div>
-                        <div class="user-games">
-
-                        </div>
-                    </div>
+					</div>
+					<div class="games-title">  
+						<h2>Games:</h2>	
+					</div>
+					<div class="user-games">
+					</div>
                     <button class="logout-button">Log out</button>
                 </div>
                 <div class="return-arrow"> <button><ion-icon name="arrow-back-outline"></ion-icon></button> </div>
@@ -64,6 +68,15 @@ export function ProfileScreen(): HTMLElement {
 						ProfileScreenElement
 					);
 				};
+				const userGames = profileSections.querySelector(
+					".user-games"
+				) as HTMLDivElement;
+				profileInfo.games.forEach((game: any) => {
+					const { score, gameDurationSeconds, createdAt } = game;
+					const username = profileInfo.username;
+					const profileImage = profileInfo.profileImageId
+					userGames.appendChild(GameComponent(username, profileImage, score, gameDurationSeconds, createdAt))
+				});
 				const logoutButton = profileSections.querySelector(
 					".logout-button"
 				) as HTMLButtonElement;

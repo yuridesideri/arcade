@@ -44,9 +44,12 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-input {
+input, h2{
 	outline: none;
 	font-size: 0.5rem;
 	font-family: 'VT323', monospace;
-	
+}
+
+img{
+	font-size: 10px;
 }
