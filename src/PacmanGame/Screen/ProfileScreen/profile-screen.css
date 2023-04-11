@@ -115,26 +115,45 @@ h1 {
 	justify-content: space-between;
 	align-items: center;
 	overflow-y: hidden;
+	overflow-x:hidden;
+	color: white;
 }
 
 .game-component{
 	width: 100%;
 	font-size: 10px;
 	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	margin-bottom: 5px;
+	background-color: gray;
+	border-radius: 5px;
+	box-sizing: border-box;
 }
-.game-component h2{
-	color: yellow;
+.game-component h1{
+	color: white;
 }
 
-.game-info{
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
+.game-info-body h1{
+	font-size: 9px;
+}
+
+.user-profile-icon{
+	height: 25px;
+	display:flex;
+	align-items: center;
+}
+
+.user-profile-icon img{
+	width: 20px;
+	height: 20px;
 }
 
 .left-game-info{
 	display: flex;
+	height: 100%;
+	align-items: center;
+	margin-left: 5px;
 }
 
 .game-info-header-left{
@@ -146,6 +165,7 @@ h1 {
 .game-info-body{
 	display: flex;
 	flex-direction: column;
+	margin-right: 2px;
 }
 
 .hidden {
