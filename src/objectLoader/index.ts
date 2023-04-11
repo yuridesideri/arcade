@@ -41,7 +41,7 @@ export async function loadArcade(
 
 	const arcade = await loadModel(
 		gltfLoader,
-		"/models/pac-man-machine-edited/scene.gltf",
+		"/models/pacman-machine-with-controller/scene.gltf",
 		scene,
 		traverseFunction,
 		1,

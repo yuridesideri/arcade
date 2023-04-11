@@ -47,6 +47,10 @@ export async function pacmanGame(
 	cube.position.set(1.58, -0.65, 0.5);
 	// scene.add(cube);
 
+	//RETURN FUNCTIONS
+	let pacmanGameLoopReturn = pacmanGameLoop;
+	let pacmanGameCleanUpReturn = pacmanGameCleanUp;
+
 	//PACMAN
 	const { pacman, mixer: pacmanMixer } = await createPacman(
 		scene,
@@ -62,12 +66,8 @@ export async function pacmanGame(
 		lostLive: false,
 		score: startingScore || 0,
 		startingTime: startingTime || dayjs().format(),
-		restarted: false
+		restarted: false,
 	} as PacmanType;
-
-	//RETURN FUNCTIONS
-	let pacmanGameLoopReturn = pacmanGameLoop;
-	let pacmanGameCleanUpReturn = pacmanGameCleanUp;
 
 	//GHOSTS
 	const { ghost: redGhost, mixer: redGhostMixer } = await createGhost(
@@ -102,7 +102,18 @@ export async function pacmanGame(
 	const updateInky = GhostLogic(blueGhost, "inky");
 	const updateClyde = GhostLogic(yellowGhost, "clyde");
 
-	console.log(pacman);
+	//Lives
+	const lives: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>[] =
+		[];
+	for (let i = 0; i < pacman.userData.lives; i++) {
+		const life = new THREE.Mesh(
+			new THREE.SphereGeometry(0.1, 32, 32),
+			new THREE.MeshBasicMaterial({ color: 0xffff00 })
+		);
+		life.position.set(-4 + i * 0.4, -5.3, 0.1);
+		scene.add(life);
+		lives.push(life);
+	}
 
 	function endGame() {
 		Screen.gameStatus = "Options";
@@ -126,7 +137,6 @@ export async function pacmanGame(
 		CSS3DObject.element.classList.remove("hidden");
 	}
 	async function restartGame() {
-		//TODO: BUG - PACMAN RESTARTING INFINITELY
 		pacmanGameCleanUp();
 		const newGame = await pacmanGame(
 			mainRenderer,
@@ -138,14 +148,17 @@ export async function pacmanGame(
 	}
 
 	function pacmanGameLoop() {
-		if (pebbleObjects.length === 276) {
-			pebbleObjects = [];
-				pacman.userData.restarted = true;
-				restartGame();
-			}
-			if (pacman.userData.restarted && pacmanGameLoopReturn !== pacmanGameLoop){
-				pacmanGameLoopReturn();
-				return;
+		if (pebbleObjects.length === 0) {
+			pebbleObjects = [new THREE.Mesh()];
+			pacman.userData.restarted = true;
+			restartGame();
+		}
+		if (
+			pacman.userData.restarted &&
+			pacmanGameLoopReturn !== pacmanGameLoop
+		) {
+			pacmanGameLoopReturn();
+			return;
 		}
 		mainRenderer.render(scene, camera);
 		pacmanMixer?.update(0.02);
@@ -165,11 +178,19 @@ export async function pacmanGame(
 		PacManGhostColisionChecker(pacman, yellowGhost);
 		PacManGhostColisionChecker(pacman, pinkGhost);
 
+		if (pacman.userData.lostLive) {
+			if (lives.length !== 0){
+				const life = lives.pop()!;
+				scene.remove(life);
+				life.geometry.dispose();
+				life.material.dispose();
+			}
+		}
+
 		pebbleObjects.forEach((pebble, index) => {
 			PacManPebbleColisionChecker(pacman, pebble, updatePebble, index);
 		});
-		if (pacman.userData.lives === 2) {
-			//Has to be changed to 3
+		if (pacman.userData.lives === 0) {
 			pacman.userData.lives = 3; //Handles fast refresh bug
 			endGame();
 			mainRenderer.render(scene, camera);
@@ -183,6 +204,7 @@ export async function pacmanGame(
 		scene.remove(blueGhost);
 		scene.remove(yellowGhost);
 		scene.remove(pinkGhost);
+		lives.forEach((life) => scene.remove(life));
 		scene.traverse((object) => {
 			if (object instanceof THREE.Mesh) {
 				object.geometry.dispose();
