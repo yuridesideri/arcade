@@ -1,5 +1,6 @@
 import "./styles.css";
-import { ProfileScreen } from "../ProfileScreen/ProfileScreen";
+import { ProfileScreen } from "../ButtonsScreen/ProfileScreen";
+import { LeaderboardsScreen } from "../ButtonsScreen/LeaderboardsScreen";
 export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	const HTMLElement = document.createElement("div");
 	
@@ -46,6 +47,10 @@ export function GameOptions(startGame: () => Promise<void>): HTMLElement {
 	const leaderBoardsButton = document.createElement("button");
 	leaderBoardsButton.className = "leaderboards-button";
 	leaderBoardsButton.innerText = "Leaderboards";
+	leaderBoardsButton.onclick = (e) => {
+		optionsScreeen.classList.add("hidden");
+		workingDiv.appendChild(LeaderboardsScreen());
+	};
 	buttonsContainer.appendChild(leaderBoardsButton);
 
 

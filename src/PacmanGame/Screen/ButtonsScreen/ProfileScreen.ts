@@ -1,4 +1,4 @@
-import "./profile-screen.css";
+import "./buttons-screen.css";
 import { LoginScreen } from "./LoginScreen";
 import { SignUpScreen } from "./SignupScreen";
 import axios from "axios";
@@ -61,6 +61,7 @@ export function ProfileScreen(): HTMLElement {
 					".return-arrow button"
 				) as HTMLButtonElement;
 				returnButton.onclick = (e) => {
+					e.preventDefault();
 					ProfileScreenElement.parentElement?.children[0].classList.remove(
 						"hidden"
 					);
@@ -81,6 +82,7 @@ export function ProfileScreen(): HTMLElement {
 					".logout-button"
 				) as HTMLButtonElement;
 				logoutButton.onclick = (e) => {
+					e.preventDefault();
 					localStorage.removeItem("userToken");
 					reloadComponent();
 				};
@@ -108,6 +110,7 @@ export function ProfileScreen(): HTMLElement {
 			".return-arrow button"
 		) as HTMLButtonElement;
 		returnButton.onclick = (e) => {
+			e.preventDefault();
 			ProfileScreenElement.parentElement?.children[0].classList.remove(
 				"hidden"
 			);
@@ -119,6 +122,7 @@ export function ProfileScreen(): HTMLElement {
 			".login-button"
 		) as HTMLButtonElement;
 		loginButton.onclick = (e) => {
+			e.preventDefault();
 			ProfileScreenElement.parentElement?.appendChild(LoginScreen());
 			ProfileScreenElement.parentElement?.removeChild(
 				ProfileScreenElement
@@ -128,6 +132,7 @@ export function ProfileScreen(): HTMLElement {
 			".signup-button"
 		) as HTMLButtonElement;
 		sugnUpButton.onclick = (e) => {
+			e.preventDefault();
 			ProfileScreenElement.parentElement?.appendChild(SignUpScreen());
 			ProfileScreenElement.parentElement?.removeChild(
 				ProfileScreenElement

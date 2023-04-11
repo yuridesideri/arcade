@@ -10,13 +10,15 @@ import { PacmanGameLogic } from "./pacmanLogic";
 import { createPebbleObjects } from "./Pebbles/pebbleMap";
 import { PacmanType } from "../types/pacmanGame";
 import { Screen } from "../main";
-import {
-	CSS3DObject,
-} from "three/examples/jsm/renderers/CSS3DRenderer";
+import { CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
+import axios from "axios";
+import dayjs from "dayjs";
 export async function pacmanGame(
 	mainRenderer: THREE.WebGLRenderer,
 	CSS3DObject: CSS3DObject,
 	startingScore?: number,
+	startingLives?: number,
+	startingTime?: string
 ) {
 	//CONTROLS
 	const userControls = {
@@ -38,7 +40,6 @@ export async function pacmanGame(
 	plane.position.set(0, 0, 0);
 	scene.add(plane);
 
-
 	//TESTS
 	const geometry = new THREE.BoxGeometry(0.3, 0.3, 0.1);
 	const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -55,11 +56,13 @@ export async function pacmanGame(
 		direction: new THREE.Vector2(1, 0),
 		speed: 0.01,
 		rotation: 0,
-		lives: 3,
+		lives: startingLives || 3,
 		poweredUp: false,
 		poweredUpTime: 0,
 		lostLive: false,
 		score: startingScore || 0,
+		startingTime: startingTime || dayjs().format(),
+		restarted: false
 	} as PacmanType;
 
 	//RETURN FUNCTIONS
@@ -88,9 +91,12 @@ export async function pacmanGame(
 		new THREE.Vector2(0.8, 0.35)
 	);
 
-	const { pebbleObjects, updatePebble, cleanUpPebbles } = createPebbleObjects(scene);
-	console.log(pebbleObjects.length);
-	const {updatePacman, removeEventListener} = PacmanGameLogic(pacman, userControls);
+	let { pebbleObjects, updatePebble, cleanUpPebbles } =
+		createPebbleObjects(scene);
+	const { updatePacman, removeEventListener } = PacmanGameLogic(
+		pacman,
+		userControls
+	);
 	const updateBlinky = GhostLogic(redGhost, "blinky");
 	const updatePinky = GhostLogic(pinkGhost, "pinky");
 	const updateInky = GhostLogic(blueGhost, "inky");
@@ -100,22 +106,47 @@ export async function pacmanGame(
 
 	function endGame() {
 		Screen.gameStatus = "Options";
-		console.log('game ended')
-		//TODO:
-		//Save score
-		//Send score to server
+		console.log("game ended");
+		const token = localStorage.getItem("userToken");
+		console.log(token);
+		if (token) {
+			axios.post(
+				`${import.meta.env.VITE_API_URL}/games`,
+				{
+					score: pacman.userData.score,
+					gameDurationSeconds: dayjs().diff(
+						dayjs(pacman.userData.startingTime),
+						"seconds"
+					),
+				},
+				{ headers: { Authorization: `Bearer ${token}` } }
+			);
+		}
 		pacmanGameCleanUp();
 		CSS3DObject.element.classList.remove("hidden");
 	}
 	async function restartGame() {
-		//TODO: BUG - PACMAN RESTARTING INFINIETELY
+		//TODO: BUG - PACMAN RESTARTING INFINITELY
 		pacmanGameCleanUp();
-		const newGame = await pacmanGame(mainRenderer,CSS3DObject, pacman.userData.score);
+		const newGame = await pacmanGame(
+			mainRenderer,
+			CSS3DObject,
+			pacman.userData.score
+		);
 		pacmanGameLoopReturn = newGame.pacmanGameLoop;
 		pacmanGameCleanUpReturn = newGame.pacmanGameCleanUp;
 	}
 
 	function pacmanGameLoop() {
+		if (pebbleObjects.length === 276) {
+			pebbleObjects = [];
+				pacman.userData.restarted = true;
+				restartGame();
+			}
+			if (pacman.userData.restarted && pacmanGameLoopReturn !== pacmanGameLoop){
+				pacmanGameLoopReturn();
+				return;
+		}
 		mainRenderer.render(scene, camera);
 		pacmanMixer?.update(0.02);
 		redGhostMixer?.update(0.01);
@@ -134,22 +165,18 @@ export async function pacmanGame(
 		PacManGhostColisionChecker(pacman, yellowGhost);
 		PacManGhostColisionChecker(pacman, pinkGhost);
 
-
-		if (pebbleObjects.length === 0) {
-			console.log("You won!");
-			restartGame();
-		}
 		pebbleObjects.forEach((pebble, index) => {
 			PacManPebbleColisionChecker(pacman, pebble, updatePebble, index);
 		});
-		if(pacman.userData.lives === 2){ //Has to be changed to 3
+		if (pacman.userData.lives === 2) {
+			//Has to be changed to 3
 			pacman.userData.lives = 3; //Handles fast refresh bug
 			endGame();
 			mainRenderer.render(scene, camera);
 		}
 	}
 
-	function pacmanGameCleanUp(){
+	function pacmanGameCleanUp() {
 		scene.remove(plane);
 		scene.remove(pacman);
 		scene.remove(redGhost);
@@ -161,11 +188,13 @@ export async function pacmanGame(
 				object.geometry.dispose();
 				object.material.dispose();
 			}
-		})
+		});
 		cleanUpPebbles();
 		removeEventListener();
 	}
 
-
-	return {pacmanGameLoop: pacmanGameLoopReturn, pacmanGameCleanUp: pacmanGameCleanUpReturn};
+	return {
+		pacmanGameLoop: pacmanGameLoopReturn,
+		pacmanGameCleanUp: pacmanGameCleanUpReturn,
+	};
 }

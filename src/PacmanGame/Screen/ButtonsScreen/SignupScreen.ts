@@ -1,5 +1,5 @@
 import { ProfileScreen } from "./ProfileScreen";
-import "./profile-screen.css";
+import "./buttons-screen.css";
 import axios from "axios";
 
 export function SignUpScreen(): HTMLElement {

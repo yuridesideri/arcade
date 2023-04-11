@@ -1,19 +1,11 @@
 import axios from "axios";
 import { ProfileScreen } from "./ProfileScreen";
-import "./profile-screen.css";
+import "./buttons-screen.css";
 
 export function LoginScreen(): HTMLElement {
 	const LoginScreenElement = document.createElement("div");
 	LoginScreenElement.className = "login-screen";
     
-
-    function reloadComponent() {
-        const parentElement = LoginScreenElement.parentElement;
-        if (parentElement) {
-            parentElement.appendChild(LoginScreen());
-            parentElement.removeChild(LoginScreenElement);
-        }
-    }
 
     function returnFunction(e?: Event){
         const parentElement = LoginScreenElement.parentElement;

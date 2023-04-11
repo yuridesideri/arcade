@@ -22,6 +22,8 @@ export type PacmanType = {
     poweredUpTime: number;
     lostLive: boolean;
     score: number;
+    startingTime: string;
+    restarted: boolean;
 }
 
 export type ScreenTypes = {gameStatus: "Options"|"Game"|"Profile"|"Leaderboards"};
