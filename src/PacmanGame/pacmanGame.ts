@@ -110,7 +110,7 @@ export async function pacmanGame(
 	}
 
 	//Score
-	const { updateScoreboard } = await createScoreboard(scene);
+	const { updateScoreboard, clearScore } = await createScoreboard(scene);
 
 	function endGame() {
 		Screen.gameStatus = "Options";
@@ -211,6 +211,7 @@ export async function pacmanGame(
 			}
 		});
 		cleanUpPebbles();
+		clearScore();
 		removeEventListener();
 	}
 

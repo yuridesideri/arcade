@@ -48,50 +48,8 @@ pacManDevCamera.rotateX(-0.45);
 loadObjects(scene);
 const arcade = await loadArcade(scene);
 sceneResizer(playerCamera, renderer, css3DRenderer);
-const { cameraDebugger } = gameControls(playerCamera, renderer);
+const { cameraDebugger } = gameControls(playerCamera, renderer, scene);
 
-window.addEventListener("click", (e) => {
-	const raycaster = new Raycaster();
-	const pointer = new Vector2();
-	pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-	pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
-	raycaster.setFromCamera(pointer, playerCamera);
-	const intersects = raycaster.intersectObjects(scene.children);
-	if (intersects.length > 0) {
-		console.log(intersects);
-		intersects.forEach((intersect) => {
-			if (
-				intersect.object.userData.name ===
-					"pac man machine_automat_0.001" &&
-				playerCamera.position.z > 26 &&
-				!intersect.object.userData.activeAnimation
-			) {
-				const tween = new TWEEN.Tween({
-					z: playerCamera.position.z,
-					xRotation: playerCamera.rotation.x,
-				})
-					.to(
-						{
-							z: playerCamera.position.z - 75,
-							xRotation: playerCamera.rotation.x - Math.PI / 11,
-						},
-						1000
-					)
-					.onUpdate((coords) => {
-						playerCamera.position.z = coords.z;
-						playerCamera.rotation.x = coords.xRotation;
-					})
-					.onComplete(() => {
-						intersect.object.userData.activeAnimation = false;
-					})
-					.onStart(() => {
-						intersect.object.userData.activeAnimation = true;
-					});
-				tween.start();
-			}
-		});
-	}
-});
 
 let pacmanGameLoop: () => void, pacmanGameCleanUp: () => void;
 
@@ -107,7 +65,7 @@ async function startGame() {
 //gameLoop
 function gameLoop() {
 	//PRIMARY
-	renderer.render(scene, pacManDevCamera);
+	renderer.render(scene, playerCamera);
 	TWEEN.update();
 	cameraDebugger();
 
@@ -118,7 +76,7 @@ function gameLoop() {
 	}
 	renderer.setRenderTarget(null);
 	//CSS RENDERER
-	css3DRenderer.render(scene, pacManDevCamera);
+	css3DRenderer.render(scene, playerCamera);
 
 	requestAnimationFrame(gameLoop);
 }

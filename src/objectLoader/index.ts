@@ -248,7 +248,13 @@ export async function createScoreboard(scene: THREE.Scene) {
 		return scoreboard;
 	}
 
-	return {updateScoreboard};
+	function clearScore() {
+		scene.remove(scoreboard);
+		textGeometry?.dispose();
+		scoreboard?.geometry.dispose();
+	}
+
+	return {updateScoreboard, clearScore};
 
 }
 
