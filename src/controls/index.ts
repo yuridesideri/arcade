@@ -4,7 +4,7 @@ import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonCont
 import TWEEN from "@tweenjs/tween.js";
 import { movePacmanEvent } from "../events";
 
-export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): {active: boolean, cameraDebugger: () => void} {
+export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): {active: boolean} {
 	const screenWidth = renderer.domElement.width;
 	const screenHeight = renderer.domElement.height;
 	const screenMiddleX = screenWidth/2;
@@ -29,6 +29,19 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 			camera.rotation.y = 0;
 	}
 
+	addEventListener("mouseout", (e: MouseEvent) => {
+		if (e.relatedTarget === null && !camera.userData.animation) {
+			camera.userData.animation = true;
+			const centerCamera = new TWEEN.Tween(camera.rotation);
+			centerCamera
+				.to({x: -Math.PI/24, y: 0}, 500)
+				.easing(TWEEN.Easing.Quadratic.Out)
+				.start().onComplete(() => {
+					camera.userData.animation = false;
+				})
+		}
+	})
+
 	//Looking around
 	addEventListener("mousemove", (e) => {
 		const deltaX = e.clientX - mouseX;
@@ -39,6 +52,7 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 		dynamicIncrementY = parseControlLogaritm(Math.abs(mouseY - screenMiddleY), dynamicIncrementYConst, dynamicIncrementYConst);
 		camera.rotation.y -= deltaX * dynamicIncrementX;
 		camera.rotation.x -= deltaY * dynamicIncrementY;
+		cameraDebugger();
 	})
 
 	//Aproaching machine
@@ -85,10 +99,11 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 		}
 	});
 
-	return {active: true, cameraDebugger}
+	return {active: true}
 }
 
 export function pacmanControlsInterface(){
+	//Functions
 	const keydownEventHandler = (e:KeyboardEvent) => {
 		if (e.key === "a") {
 			movePacmanEvent.dynamicInfo = "left";
@@ -107,10 +122,11 @@ export function pacmanControlsInterface(){
 		}
 		dispatchEvent(movePacmanEvent);
 	}
+	
+	//EventListeners
 	addEventListener("keydown", keydownEventHandler)
 	const clearMobileEvent = mobilePacmanControls();
-	// addEventListener("touchstart", )
-	// addEventListener("touchend", )
+
 	function cleanUpEvents(){
 		removeEventListener("keydown", keydownEventHandler)
 		clearMobileEvent();
@@ -125,6 +141,8 @@ document.addEventListener('touchend', onTouchEnd, false);
 let touchStartX = 0;
 let touchStartY = 0;
 
+const TOUCH_THRESHOLD = 30;
+
 function onTouchStart(event: TouchEvent) {
   touchStartX = event.touches[0].clientX;
   touchStartY = event.touches[0].clientY; 
@@ -138,7 +156,7 @@ function onTouchEnd(event: TouchEvent) {
   const swipeDistanceY = touchEndY - touchStartY;
 
   
-  if (!(Math.abs(swipeDistanceX) > 40 || Math.abs(swipeDistanceY) > 40)) return;
+  if (!(Math.abs(swipeDistanceX) > TOUCH_THRESHOLD || Math.abs(swipeDistanceY) > TOUCH_THRESHOLD)) return;
   
   if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)){
 	  if (swipeDistanceX > 0) {

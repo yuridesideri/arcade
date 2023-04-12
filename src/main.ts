@@ -1,7 +1,6 @@
 import "./reset.css";
 import { createWorld, sceneResizer } from "./world";
 import { gameControls } from "./controls";
-import { Raycaster, Vector2 } from "three";
 import TWEEN from "@tweenjs/tween.js";
 import { createScreenMesh, loadArcade, loadObjects } from "./objectLoader";
 import * as THREE from "three";
@@ -48,7 +47,7 @@ pacManDevCamera.rotateX(-0.45);
 loadObjects(scene);
 const arcade = await loadArcade(scene);
 sceneResizer(playerCamera, renderer, css3DRenderer);
-const { cameraDebugger } = gameControls(playerCamera, renderer, scene);
+gameControls(playerCamera, renderer, scene);
 
 
 let pacmanGameLoop: () => void, pacmanGameCleanUp: () => void;
@@ -67,7 +66,6 @@ function gameLoop() {
 	//PRIMARY
 	renderer.render(scene, playerCamera);
 	TWEEN.update();
-	cameraDebugger();
 
 	//PACMAN GAME
 	renderer.setRenderTarget(screenData.renderTarget);
