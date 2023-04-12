@@ -108,12 +108,62 @@ export function pacmanControlsInterface(){
 		dispatchEvent(movePacmanEvent);
 	}
 	addEventListener("keydown", keydownEventHandler)
+	const clearMobileEvent = mobilePacmanControls();
 	// addEventListener("touchstart", )
 	// addEventListener("touchend", )
 	function cleanUpEvents(){
 		removeEventListener("keydown", keydownEventHandler)
+		clearMobileEvent();
 	}
 	return cleanUpEvents;
+}
+
+function mobilePacmanControls(){
+document.addEventListener('touchstart', onTouchStart, false);
+document.addEventListener('touchend', onTouchEnd, false);
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+function onTouchStart(event: TouchEvent) {
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY; 
+}
+
+function onTouchEnd(event: TouchEvent) {
+  const touchEndX = event.changedTouches[0].clientX; 
+  const touchEndY = event.changedTouches[0].clientY; 
+
+  const swipeDistanceX = touchEndX - touchStartX;
+  const swipeDistanceY = touchEndY - touchStartY;
+
+  
+  if (!(Math.abs(swipeDistanceX) > 40 || Math.abs(swipeDistanceY) > 40)) return;
+  
+  if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)){
+	  if (swipeDistanceX > 0) {
+		  movePacmanEvent.dynamicInfo = "right";
+		} else {
+			movePacmanEvent.dynamicInfo = "left";
+		}
+	} else {
+		if (swipeDistanceY > 0) {
+			movePacmanEvent.dynamicInfo = "down";
+		} else {
+			movePacmanEvent.dynamicInfo = "up";
+		}
+	}
+	
+	 dispatchEvent(movePacmanEvent);
+}
+
+ function clearEvents (){
+	document.removeEventListener('touchstart', onTouchStart, false);
+	document.removeEventListener('touchend', onTouchEnd, false);
+ }
+
+ return clearEvents;
+
 }
 
 export function testingControlsCreator(renderer: Renderer) {
