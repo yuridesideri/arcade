@@ -3,6 +3,7 @@ import { LoginScreen } from "./LoginScreen";
 import { SignUpScreen } from "./SignupScreen";
 import axios from "axios";
 import { GameComponent } from "../Components";
+import { identicon } from "minidenticons";
 
 export function ProfileScreen(): HTMLElement {
 	const ProfileScreenElement = document.createElement("div");
@@ -31,18 +32,16 @@ export function ProfileScreen(): HTMLElement {
 					username: string;
 					games: [];
 				};
-				 console.log(profileInfo)
+				console.log(identicon(profileInfo.username))
 				const profileSections = document.createElement("div");
 				profileSections.className = "profile-section";
 				profileSections.innerHTML = `
                 <div class="profile-section">
                     <div class="user-header">
                         <div class="user-image">
-                            <img
-                            width="36px"
-                            height="36px"
-                            src="https://www.giantbomb.com/a/uploads/scale_medium/12/129563/2926205-pacman.png" 
-                            alt="User image" />
+							<div class="image-box"> 
+								${profileInfo.profileImageId ? "" : identicon(profileInfo.username)}
+							</div>
                             <div class="user-info">
                                 <h1>${profileInfo.username}</h1>
                             </div>

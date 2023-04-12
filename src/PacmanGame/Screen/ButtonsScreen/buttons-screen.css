@@ -84,9 +84,21 @@ h1 {
 	align-items: end;
 }
 
+.image-box{
+	width: 30px;
+	background-color: black;
+	border-radius: 5px;
+}
+
+.image-box svg{
+	width: 100%;
+	margin: 0;
+}
+
 .user-info{
     font-size: 20px;
     margin-left: 8px;
+	margin-bottom: 8px;
 }
 
 .games-title{
@@ -121,6 +133,7 @@ h1 {
 	margin-bottom: 5px;
 	background-color: gray;
 	border-radius: 5px;
+	padding: 3px;
 	box-sizing: border-box;
 }
 .game-component h1{
@@ -136,7 +149,10 @@ h1 {
 }
 
 .user-profile-icon{
-	height: 25px;
+	height: 19px;
+	width: 19px;
+	background-color: black;
+	border-radius: 5px;
 	display:flex;
 	align-items: center;
 }
@@ -150,13 +166,13 @@ h1 {
 	display: flex;
 	height: 100%;
 	align-items: center;
-	margin-left: 5px;
+	margin-left: 2px;
 }
 
 .game-info-header-left{
 	display: flex;
 	flex-direction: column;
-	margin-left: 5px;
+	margin-left: 4px;
 }
 
 .game-info-body{

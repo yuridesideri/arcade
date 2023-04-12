@@ -10,30 +10,7 @@ export function PacmanGameLogic(
 	pacman: THREE.Group,
 	userControls: userControls
 ) {
-	// const keydownEventHandler = (e:KeyboardEvent) => {
-	// 	if (e.key === "a") {
-	// 		userControls.direction = new THREE.Vector2(-1, 0);
-	// 	}
-	// 	if (e.key === "d") {
-	// 		userControls.direction = new THREE.Vector2(1, 0);
-	// 	}
-	// 	if (e.key === "w") {
-	// 		userControls.direction = new THREE.Vector2(0, 1);
-	// 	}
-	// 	if (e.key === "s") {
-	// 		userControls.direction = new THREE.Vector2(0, -1);
-	// 	}
-	// 	if (
-	// 		userControls.direction.x === -1 * pacman.userData.direction.x ||
-	// 		userControls.direction.y === -1 * pacman.userData.direction.y
-	// 	) {
-	// 		pacman.userData.direction.x = userControls.direction.x;
-	// 		pacman.userData.direction.y = userControls.direction.y;
-	// 		pacman.userData.rotation =
-	// 			Math.asin(pacman.userData.direction.y) ||
-	// 			Math.asin(pacman.userData.direction.x) + -Math.PI / 2;
-	// 	}
-	// }
+
 	const changePacmanDirectionEventHandler = (e:any) => {
 		if (e.dynamicInfo === "left") {
 			userControls.direction = new THREE.Vector2(-1, 0);

@@ -19,7 +19,7 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 	function cameraDebugger() {
 		if (
 			camera.rotation.x > Math.PI / 12 ||
-			camera.rotation.x < -Math.PI / 6
+			camera.rotation.x < -Math.PI / 3
 		)
 			camera.rotation.x = 0;
 		if (
@@ -46,7 +46,6 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 	addEventListener("mousemove", (e) => {
 		const deltaX = e.movementX;
 		const deltaY = e.movementY;
-		console.log(e);
 		if (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) return;
 		mouseX = e.clientX;
 		mouseY = e.clientY;
