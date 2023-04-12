@@ -216,10 +216,6 @@ export async function createGhost(
 	return { ghost, mixer };
 }
 
-export function createPebbles(scene: THREE.Scene, pebbleMap: number[][]) {
-	const pebbles = [];
-}
-
 export async function createScoreboard(scene: THREE.Scene) {
 	const ttfLoader = new TTFLoader();
 	const scoreFontJson = await ttfLoader.loadAsync("/fonts/VT323-Regular.ttf");

@@ -5,6 +5,17 @@ import { GameComponent } from "../Components";
 export function LeaderboardsScreen(): HTMLElement {
 	const LeaderboardsScreenElement = document.createElement("div");
 	LeaderboardsScreenElement.className = "leaderboards-screen";
+	let loading = true;
+
+	function returnScreen(e?: Event) {
+		e?.preventDefault();
+		LeaderboardsScreenElement.parentElement?.children[0].classList.remove(
+			"hidden"
+		);
+		LeaderboardsScreenElement.parentElement?.removeChild(
+			LeaderboardsScreenElement
+		);
+	}
 
 	axios
 		.get(import.meta.env.VITE_API_URL + "/games/leaderboards")
@@ -23,27 +34,19 @@ export function LeaderboardsScreen(): HTMLElement {
 			const leaderboardsSection = document.createElement("div");
 			leaderboardsSection.className = "leaderboards-section";
 			leaderboardsSection.innerHTML = `
-		<div class="leaderboards-page">
-			<div class="leaderboards-header">
-				<h1>Leaderboards:</h1>
+			<div class="leaderboards-page">
+				<div class="leaderboards-header">
+					<h1>Leaderboards:</h1>
+				</div>
+				<div class="leaderboards-list">
+				</div>
 			</div>
-			<div class="leaderboards-list">
-			</div>
-		</div>
-		<div class="return-arrow"> <button><ion-icon name="arrow-back-outline"></ion-icon></button> </div>
-		`;
+			<div class="return-arrow"> <button><ion-icon name="arrow-back-outline"></ion-icon></button> </div>
+			`;
 			const returnButton = leaderboardsSection.querySelector(
 				".return-arrow button"
 			) as HTMLButtonElement;
-			returnButton.onclick = (e) => {
-				e.preventDefault();
-				LeaderboardsScreenElement.parentElement?.children[0].classList.remove(
-					"hidden"
-				);
-				LeaderboardsScreenElement.parentElement?.removeChild(
-					LeaderboardsScreenElement
-				);
-			};
+			returnButton.onclick = returnScreen;
 			const leaderboardsList = leaderboardsSection.querySelector(
 				".leaderboards-list"
 			) as HTMLDivElement;
@@ -60,10 +63,13 @@ export function LeaderboardsScreen(): HTMLElement {
 				leaderboardsList.appendChild(leaderboardComponent);
 			});
 			LeaderboardsScreenElement.appendChild(leaderboardsSection);
-		}).catch((err) => {
-			console.log(err)
 		})
-
+		.catch((err) => {
+			console.log(err);
+			returnScreen();
+		}).finally(() => {
+			loading = false;
+		})
 
 	return LeaderboardsScreenElement;
 }

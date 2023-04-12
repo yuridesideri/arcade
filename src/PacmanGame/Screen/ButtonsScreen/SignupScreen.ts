@@ -7,6 +7,7 @@ export function SignUpScreen(): HTMLElement {
 	SignUpScreenElement.className = "login-screen";
 
     function returnFunction(e?: Event){
+		e?.preventDefault();
         const parentElement = SignUpScreenElement.parentElement;
         if (parentElement) {
             parentElement.appendChild(ProfileScreen());
