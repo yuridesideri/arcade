@@ -34,7 +34,7 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 			camera.userData.animation = true;
 			const centerCamera = new TWEEN.Tween(camera.rotation);
 			centerCamera
-				.to({x: -Math.PI/24, y: 0}, 500)
+				.to({x: camera.userData.pacmanScreen ? - Math.PI / 7 : -Math.PI/24, y: 0}, 500)
 				.easing(TWEEN.Easing.Quadratic.Out)
 				.start().onComplete(() => {
 					camera.userData.animation = false;
@@ -57,6 +57,7 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 
 	//Aproaching machine
 	addEventListener("click", (e) => {
+		//TODO: FIX CAMERA BUG
 		const raycaster = new Raycaster();
 		const pointer = new Vector2();
 		pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -92,6 +93,7 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 						})
 						.onStart(() => {
 							intersect.object.userData.activeAnimation = true;
+							camera.userData.pacmanScreen = true;
 						});
 					tween.start();
 				}
