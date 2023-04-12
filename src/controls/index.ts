@@ -44,8 +44,10 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 
 	//Looking around
 	addEventListener("mousemove", (e) => {
-		const deltaX = e.clientX - mouseX;
-		const deltaY = e.clientY - mouseY;
+		const deltaX = e.movementX;
+		const deltaY = e.movementY;
+		console.log(e);
+		if (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) return;
 		mouseX = e.clientX;
 		mouseY = e.clientY;
 		dynamicIncrementX = parseControlLogaritm(Math.abs(mouseX - screenMiddleX), dynamicIncrementXConst, dynamicIncrementXConst);
@@ -57,7 +59,6 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 
 	//Aproaching machine
 	addEventListener("click", (e) => {
-		//TODO: FIX CAMERA BUG
 		const raycaster = new Raycaster();
 		const pointer = new Vector2();
 		pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
