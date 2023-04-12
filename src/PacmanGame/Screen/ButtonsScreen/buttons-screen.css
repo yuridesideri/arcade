@@ -85,26 +85,30 @@ h1 {
 }
 
 .image-box{
-	width: 30px;
+	width: 34px;
+	height: 34px;
 	background-color: black;
 	border-radius: 5px;
 }
 
-.image-box svg{
-	width: 100%;
-	margin: 0;
-}
 
 .user-info{
     font-size: 20px;
-    margin-left: 8px;
-	margin-bottom: 8px;
+    margin-left: 5px;
+	display: flex;
+	align-items: end;
+	justify-content: end;
 }
 
 .games-title{
 	margin-top: 10px;
+	margin-bottom: 3px;
 	width: 100%;
 	color:rgb(201, 201, 12);
+}
+
+.games-title h2{
+	font-size: 12px;
 }
 
 .logout-button {
