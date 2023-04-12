@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { createGhost, createPacman } from "../objectLoader";
+import { createGhost, createPacman, createScoreboard } from "../objectLoader";
 import { pacmanStartingPoint } from "../constants/pacmanMap";
 import { GhostLogic } from "./ghostLogic";
 import {
@@ -13,6 +13,7 @@ import { Screen } from "../main";
 import { CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
 import axios from "axios";
 import dayjs from "dayjs";
+
 export async function pacmanGame(
 	mainRenderer: THREE.WebGLRenderer,
 	CSS3DObject: CSS3DObject,
@@ -39,13 +40,6 @@ export async function pacmanGame(
 	const plane = new THREE.Mesh(planeGeo, planeMat);
 	plane.position.set(0, 0, 0);
 	scene.add(plane);
-
-	//TESTS
-	const geometry = new THREE.BoxGeometry(0.3, 0.3, 0.1);
-	const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-	const cube = new THREE.Mesh(geometry, material);
-	cube.position.set(1.58, -0.65, 0.5);
-	// scene.add(cube);
 
 	//RETURN FUNCTIONS
 	let pacmanGameLoopReturn = pacmanGameLoop;
@@ -115,6 +109,9 @@ export async function pacmanGame(
 		lives.push(life);
 	}
 
+	//Score
+	const { updateScoreboard } = await createScoreboard(scene);
+
 	function endGame() {
 		Screen.gameStatus = "Options";
 		console.log("game ended");
@@ -178,8 +175,10 @@ export async function pacmanGame(
 		PacManGhostColisionChecker(pacman, yellowGhost);
 		PacManGhostColisionChecker(pacman, pinkGhost);
 
+		updateScoreboard(pacman.userData.score);
+
 		if (pacman.userData.lostLive) {
-			if (lives.length !== 0){
+			if (lives.length !== 0) {
 				const life = lives.pop()!;
 				scene.remove(life);
 				life.geometry.dispose();
