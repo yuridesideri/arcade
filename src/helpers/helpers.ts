@@ -8,3 +8,4 @@ export function parseControlLogaritm(delta: number, base: number, limit: number)
 	else if (log >= limit) return limit;
 	else return log;
 }
+

@@ -2,6 +2,7 @@ import { Camera, PerspectiveCamera, Raycaster, Renderer, Scene, Vector2 } from "
 import { parseControlLogaritm } from "../helpers/helpers";
 import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
 import TWEEN from "@tweenjs/tween.js";
+import { movePacmanEvent } from "../events";
 
 export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): {active: boolean, cameraDebugger: () => void} {
 	const screenWidth = renderer.domElement.width;
@@ -87,6 +88,33 @@ export function gameControls(camera: Camera, renderer: Renderer, scene: Scene): 
 	return {active: true, cameraDebugger}
 }
 
+export function pacmanControlsInterface(){
+	const keydownEventHandler = (e:KeyboardEvent) => {
+		if (e.key === "a") {
+			movePacmanEvent.dynamicInfo = "left";
+		}
+		else if (e.key === "d") {
+			movePacmanEvent.dynamicInfo = "right";
+		}
+		else if (e.key === "w") {
+			movePacmanEvent.dynamicInfo = "up";
+		}
+		else if (e.key === "s") {
+			movePacmanEvent.dynamicInfo = "down";
+		}
+		else {
+			return;
+		}
+		dispatchEvent(movePacmanEvent);
+	}
+	addEventListener("keydown", keydownEventHandler)
+	// addEventListener("touchstart", )
+	// addEventListener("touchend", )
+	function cleanUpEvents(){
+		removeEventListener("keydown", keydownEventHandler)
+	}
+	return cleanUpEvents;
+}
 
 export function testingControlsCreator(renderer: Renderer) {
     const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);

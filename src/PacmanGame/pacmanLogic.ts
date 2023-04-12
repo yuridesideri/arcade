@@ -4,23 +4,47 @@ import { pacmanStartingPoint } from "../constants/pacmanMap";
 import { mapColisionChecker } from "./colisionCheckers";
 import { Vector2 } from "three";
 import { pacmanMap } from "../constants/pacmanMap";
+import { pacmanControlsInterface } from "../controls";
 
 export function PacmanGameLogic(
 	pacman: THREE.Group,
 	userControls: userControls
 ) {
-	const keydownEventHandler = (e:KeyboardEvent) => {
-		console.log("pressed");
-		if (e.key === "a") {
+	// const keydownEventHandler = (e:KeyboardEvent) => {
+	// 	if (e.key === "a") {
+	// 		userControls.direction = new THREE.Vector2(-1, 0);
+	// 	}
+	// 	if (e.key === "d") {
+	// 		userControls.direction = new THREE.Vector2(1, 0);
+	// 	}
+	// 	if (e.key === "w") {
+	// 		userControls.direction = new THREE.Vector2(0, 1);
+	// 	}
+	// 	if (e.key === "s") {
+	// 		userControls.direction = new THREE.Vector2(0, -1);
+	// 	}
+	// 	if (
+	// 		userControls.direction.x === -1 * pacman.userData.direction.x ||
+	// 		userControls.direction.y === -1 * pacman.userData.direction.y
+	// 	) {
+	// 		pacman.userData.direction.x = userControls.direction.x;
+	// 		pacman.userData.direction.y = userControls.direction.y;
+	// 		pacman.userData.rotation =
+	// 			Math.asin(pacman.userData.direction.y) ||
+	// 			Math.asin(pacman.userData.direction.x) + -Math.PI / 2;
+	// 	}
+	// }
+	const changePacmanDirectionEventHandler = (e:any) => {
+		if (e.dynamicInfo === "left") {
 			userControls.direction = new THREE.Vector2(-1, 0);
 		}
-		if (e.key === "d") {
+		if (e.dynamicInfo === "right") {
 			userControls.direction = new THREE.Vector2(1, 0);
 		}
-		if (e.key === "w") {
+		if (e.dynamicInfo === "up") {
 			userControls.direction = new THREE.Vector2(0, 1);
 		}
-		if (e.key === "s") {
+		if (e.dynamicInfo === "down") {
 			userControls.direction = new THREE.Vector2(0, -1);
 		}
 		if (
@@ -34,10 +58,13 @@ export function PacmanGameLogic(
 				Math.asin(pacman.userData.direction.x) + -Math.PI / 2;
 		}
 	}
-	window.addEventListener("keydown", keydownEventHandler);
+
+	window.addEventListener("movePacmanEvent", changePacmanDirectionEventHandler);
+	const cleanUpControlsEvents = pacmanControlsInterface();
 
 	function removeEventListener() {
-		window.removeEventListener("keydown", keydownEventHandler);
+		window.removeEventListener("keydown", changePacmanDirectionEventHandler);
+		cleanUpControlsEvents();
 	}
 
 	function resetPacman() {

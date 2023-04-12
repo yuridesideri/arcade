@@ -1,0 +1,1 @@
+export type dynamicInfo ="left"| "right" | "up" | "down"| null;
