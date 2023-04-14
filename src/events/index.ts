@@ -8,4 +8,6 @@ export class MovePacmanEvent extends Event {
     this.dynamicInfo = dynamicInfo;
   }
 }
-export const movePacmanEvent = new MovePacmanEvent("movePacmanEvent", null);
+
+
+export const movePacmanEvent: MovePacmanEvent = new MovePacmanEvent("movePacmanEvent", {direction: null});

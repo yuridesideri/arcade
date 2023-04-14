@@ -1,6 +1,6 @@
 import "./reset.css";
 import { createWorld, sceneResizer } from "./world";
-import { gameControls } from "./controls";
+import { gameControls, pacmanControlsInterface } from "./controls";
 import TWEEN from "@tweenjs/tween.js";
 import { createScreenMesh, loadArcade, loadObjects } from "./objectLoader";
 import * as THREE from "three";
@@ -11,6 +11,7 @@ import {
 } from "three/examples/jsm/renderers/CSS3DRenderer";
 import { GameOptions } from "./PacmanGame/Screen/PacManOptions/pacmanOptions";
 import { ScreenTypes } from "./types/pacmanGame";
+import { animateMachineControl } from "./animations/animations";
 // import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -20,8 +21,6 @@ const screenMesh = createScreenMesh(scene);
 const screenData = screenMesh.userData;
 export const Screen: ScreenTypes = { gameStatus: "Options" };
 
-//USER
-// const score = localStorage.getItem("score") || localStorage.setItem("score", "0");
 
 //3d css renderer
 const css3DRenderer = new CSS3DRenderer({element: app!});
@@ -45,10 +44,13 @@ const pacManDevCamera = new THREE.PerspectiveCamera(
 pacManDevCamera.position.set(0, 50, 25);
 pacManDevCamera.rotateX(-0.45);
 loadObjects(scene);
-const arcade = await loadArcade(scene);
+await loadArcade(scene);
+
+
 sceneResizer(playerCamera, renderer, css3DRenderer);
 gameControls(playerCamera, renderer, scene);
-
+pacmanControlsInterface();
+animateMachineControl(scene);
 
 let pacmanGameLoop: () => void, pacmanGameCleanUp: () => void;
 

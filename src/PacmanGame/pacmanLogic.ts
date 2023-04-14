@@ -4,7 +4,6 @@ import { pacmanStartingPoint } from "../constants/pacmanMap";
 import { mapColisionChecker } from "./colisionCheckers";
 import { Vector2 } from "three";
 import { pacmanMap } from "../constants/pacmanMap";
-import { pacmanControlsInterface } from "../controls";
 
 export function PacmanGameLogic(
 	pacman: THREE.Group,
@@ -12,16 +11,16 @@ export function PacmanGameLogic(
 ) {
 
 	const changePacmanDirectionEventHandler = (e:any) => {
-		if (e.dynamicInfo === "left") {
+		if (e.dynamicInfo.direction === "left") {
 			userControls.direction = new THREE.Vector2(-1, 0);
 		}
-		if (e.dynamicInfo === "right") {
+		if (e.dynamicInfo.direction === "right") {
 			userControls.direction = new THREE.Vector2(1, 0);
 		}
-		if (e.dynamicInfo === "up") {
+		if (e.dynamicInfo.direction === "up") {
 			userControls.direction = new THREE.Vector2(0, 1);
 		}
-		if (e.dynamicInfo === "down") {
+		if (e.dynamicInfo.direction === "down") {
 			userControls.direction = new THREE.Vector2(0, -1);
 		}
 		if (
@@ -36,12 +35,10 @@ export function PacmanGameLogic(
 		}
 	}
 
-	window.addEventListener("movePacmanEvent", changePacmanDirectionEventHandler);
-	const cleanUpControlsEvents = pacmanControlsInterface();
+	addEventListener("movePacmanEvent", changePacmanDirectionEventHandler);
 
 	function removeEventListener() {
 		window.removeEventListener("keydown", changePacmanDirectionEventHandler);
-		cleanUpControlsEvents();
 	}
 
 	function resetPacman() {

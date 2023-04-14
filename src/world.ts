@@ -16,7 +16,7 @@ export function createWorld(parentElement: HTMLElement): {
 		0.1,
 		1000
 	);
-	camera.position.set(1, 50, 100);
+	camera.position.set(0, 50, 100);
 	camera.rotateX(-Math.PI / 24);
 
 

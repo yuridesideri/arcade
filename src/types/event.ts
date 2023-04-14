@@ -1,1 +1,4 @@
-export type dynamicInfo ="left"| "right" | "up" | "down"| null;
+export type dynamicInfo = {
+    direction: "left"| "right" | "up" | "down"| null
+    type?: "keydown" | "touchstart" | "touchend" | "keyup"
+}
