@@ -136,28 +136,30 @@ export function pacmanControlsInterface() {
 	//Functions
 	const keydownEventHandler = (e: KeyboardEvent) => {
 		movePacmanEvent.dynamicInfo.type = "keydown";
-		if (e.key === "a") {
+		if (e.key.toLocaleLowerCase() === "a") {
 			movePacmanEvent.dynamicInfo.direction = "left";
-		} else if (e.key === "d") {
+		} else if (e.key.toLocaleLowerCase() === "d") {
 			movePacmanEvent.dynamicInfo.direction = "right";
-		} else if (e.key === "w") {
+		} else if (e.key.toLocaleLowerCase() === "w") {
 			movePacmanEvent.dynamicInfo.direction = "up";
-		} else if (e.key === "s") {
+		} else if (e.key.toLocaleLowerCase() === "s") {
 			movePacmanEvent.dynamicInfo.direction = "down";
 		} else {
 			return;
 		}
 		dispatchEvent(movePacmanEvent);
 	};
+
+	//TODO: BUG ESTÁ AQUI
 	const keyupEventHandler = (e: KeyboardEvent) => {
 		movePacmanEvent.dynamicInfo.type = "keyup";
-		if (e.key === "a") {
+		if (e.key.toLocaleLowerCase() === "a") {
 			movePacmanEvent.dynamicInfo.direction = "left";
-		} else if (e.key === "d") {
-			movePacmanEvent.dynamicInfo.direction = "right";
-		} else if (e.key === "w") {
+		} else if (e.key.toLocaleLowerCase() === "d") {
+			movePacmanEvent.dynamicInfo.direction = "right";  
+		} else if (e.key.toLocaleLowerCase() === "w") {
 			movePacmanEvent.dynamicInfo.direction = "up";
-		} else if (e.key === "s") {
+		} else if (e.key.toLocaleLowerCase() === "s") {
 			movePacmanEvent.dynamicInfo.direction = "down";
 		} else {
 			return;
@@ -167,7 +169,7 @@ export function pacmanControlsInterface() {
 
 	//EventListeners
 	addEventListener("keydown", keydownEventHandler);
-	addEventListener("keyup", keyupEventHandler);
+	// addEventListener("keyup", keyupEventHandler);
 	const clearMobileEvent = mobilePacmanControls();
 
 	function cleanUpEvents() {
