@@ -16,10 +16,13 @@ import { animateMachineControl } from "./animations/animations";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+export const Screen: ScreenTypes = { gameStatus: "Options" };
+
+async function main(){
+
 const { scene, camera: playerCamera, renderer } = createWorld(app!);
 const screenMesh = createScreenMesh(scene);
 const screenData = screenMesh.userData;
-export const Screen: ScreenTypes = { gameStatus: "Options" };
 
 
 //3d css renderer
@@ -81,3 +84,6 @@ function gameLoop() {
 	requestAnimationFrame(gameLoop);
 }
 gameLoop();
+
+}
+main();

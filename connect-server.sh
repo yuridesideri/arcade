@@ -1,0 +1,1 @@
+ssh -i "amazonkey.pem" ubuntu@ec2-54-173-170-182.compute-1.amazonaws.com

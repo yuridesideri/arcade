@@ -17,7 +17,7 @@ RUN npm run build
 RUN mkdir -p /var/www/html
 
 # move o conteúdo
-RUN mv build/* /var/www/html
+RUN mv dist/* /var/www/html
 
 # sai da pasta
 WORKDIR /

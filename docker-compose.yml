@@ -8,15 +8,35 @@ services:
       - arcade-backend/.env
     volumes:
       - postgres-volume:/var/lib/postgresql/data
+
   node:
     container_name: node
     build: ./arcade-backend
     ports:
-      - 5000:5000
+      - 5001:5000
     depends_on:
       - postgres
     env_file:
       - arcade-backend/.env
 
+  web:
+    container_name: web
+    build: ./arcade-frontend/app
+    volumes:
+      - web-volume:/var/www/html
+
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - web-volume:/var/www/html
+    depends_on:
+      - postgres
+      - node
+      - web
+
 volumes:
   postgres-volume:
+  web-volume:
