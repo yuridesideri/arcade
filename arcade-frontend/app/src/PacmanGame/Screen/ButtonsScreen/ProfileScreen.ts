@@ -20,7 +20,7 @@ export function ProfileScreen(): HTMLElement {
 	const userToken = localStorage.getItem("userToken");
 	if (userToken && userToken !== "undefined") {
 		axios
-			.get(import.meta.env.VITE_API_URL + "/user/me", {
+			.get(import.meta.env.VITE_API_URL + "/players/me", {
 				headers: { authorization: "Bearer " + userToken },
 			})
 			.then(({ data }) => {

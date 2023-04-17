@@ -50,6 +50,7 @@ export function SignUpScreen(): HTMLElement {
 			password,
 			email,
 		}).then((res) => {
+				localStorage.setItem("userToken", res.data.token);
                 returnFunction();
         }).catch((err) => {
             alert("Something went wrong!");
