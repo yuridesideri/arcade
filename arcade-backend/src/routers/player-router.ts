@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { createUserSchema } from "@/schemas";
-import { validateBody } from "@/middlewares";
+import { authenticateToken } from "@/middlewares";
+import { getPlayerGamesCtrl } from "@/controllers/player-controller";
 
 const playerRouter = Router();
 
-playerRouter
-	.post("/", validateBody(createUserSchema), usersPost)
-	.get("/me", getme);
+playerRouter.use(authenticateToken).get("/me", getPlayerGamesCtrl);
 
 export { playerRouter };
