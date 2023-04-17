@@ -2,6 +2,6 @@ import { Router } from "express";
 
 const gamesRouter = Router();
 
-gamesRouter.post("/sign-in", validateBody(signInSchema), singInPost);
+gamesRouter.get("/leaderboards", leaderBoardsCtrl).post("/", createGameCtrl);
 
 export { gamesRouter };

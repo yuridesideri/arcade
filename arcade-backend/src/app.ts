@@ -8,25 +8,22 @@ import { loadEnv, connectDb, disconnectDB } from "@/config";
 loadEnv();
 
 import { handleApplicationErrors } from "@/middlewares";
-import { usersRouter, authenticationRouter, eventsRouter, enrollmentsRouter } from "@/routers";
+import { mainRouter } from "@/routers";
 
 const app = express();
-app
-  .use(cors())
-  .use(express.json())
-  .get("/health", (_req, res) => res.send("OK!"))
-  .use("/users", usersRouter)
-  .use("/auth", authenticationRouter)
-  .use("/enrollments", enrollmentsRouter)
-  .use(handleApplicationErrors);
+app.use(cors())
+	.use(express.json())
+	.get("/health", (_req, res) => res.send("OK!"))
+	.use("/", mainRouter)
+	.use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
-  connectDb();
-  return Promise.resolve(app);
+	connectDb();
+	return Promise.resolve(app);
 }
 
 export async function close(): Promise<void> {
-  await disconnectDB();
+	await disconnectDB();
 }
 
 export default app;

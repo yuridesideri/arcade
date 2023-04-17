@@ -4,6 +4,6 @@ import { validateBody } from "@/middlewares";
 
 const playerRouter = Router();
 
-playerRouter.post("/", validateBody(createUserSchema), usersPost);
+playerRouter.post("/", validateBody(createUserSchema), usersPost).get("/me", getme);
 
 export { playerRouter };
