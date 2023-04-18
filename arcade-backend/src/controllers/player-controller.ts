@@ -9,8 +9,8 @@ export async function getPlayerGamesCtrl(
 ): Promise<Response> {
 	try {
 		const { id } = req.userData;
-        const playerAndGames = await getPlayerGamesRepo(id);
-        return res.send({playerAndGames, games: playerAndGames.Game});
+		const playerAndGames = await getPlayerGamesRepo(id);
+		return res.send({ ...playerAndGames, games: playerAndGames.Game });
 	} catch (err) {
 		console.error(err);
 		res.status(err.status || httpStatus.BAD_REQUEST);

@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc",
+    "build": "ttsc -p tsconfig.build.json",
     "dev": "NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
-    "start": "npx prisma migrate deploy && node dist/src/server.js",
+    "start": "npx prisma migrate deploy && npx prisma db push && npx prisma generate && node dist/server.js",
     "migration:run": "npx prisma migrate deploy",
     "migration:generate": "npm run dev:load-envs prisma migrate dev",
     "test": "NODE_ENV=test jest --passWithNoTests --runInBand",
@@ -52,6 +52,7 @@
     "ts-jest": "^26.5.5",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "3.9.0",
+    "ttypescript": "^1.5.15",
     "typescript": "^4.2.4",
     "typescript-transform-paths": "2.2.3"
   },

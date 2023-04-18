@@ -32,7 +32,6 @@ export function ProfileScreen(): HTMLElement {
 					username: string;
 					games: [];
 				};
-				console.log(identicon(profileInfo.username))
 				const profileSections = document.createElement("div");
 				profileSections.className = "profile-section";
 				profileSections.innerHTML = `

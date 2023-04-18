@@ -116,7 +116,6 @@ export async function pacmanGame(
 		Screen.gameStatus = "Options";
 		console.log("game ended");
 		const token = localStorage.getItem("userToken");
-		console.log(token);
 		if (token) {
 			axios.post(
 				`${import.meta.env.VITE_API_URL}/games`,

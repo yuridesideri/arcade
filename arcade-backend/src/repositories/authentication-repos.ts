@@ -8,11 +8,16 @@ export function loginRepo(email: string) {
 	});
 }
 
-export function registerRepo(credentials : {email: string, hashedPassword: string, username: string}) {
-    return prisma.player.create({
-        data: {
-           ...credentials,
-           password: credentials.hashedPassword
-        },
-    });
+export function registerRepo(credentials: {
+	email: string;
+	hashedPassword: string;
+	username: string;
+}) {
+	return prisma.player.create({
+		data: {
+			email: credentials.email,
+			username: credentials.username,
+			password: credentials.hashedPassword,
+		},
+	});
 }

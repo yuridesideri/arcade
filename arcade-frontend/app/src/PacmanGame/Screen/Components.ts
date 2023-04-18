@@ -17,7 +17,7 @@ export function returnArrow(): HTMLElement {
 
 export function GameComponent(
 	username: string,
-	profileImage: string,
+	profileImage: string | null,
 	score: number,
 	gameDurationSeconds: number,
 	createdAt: Date

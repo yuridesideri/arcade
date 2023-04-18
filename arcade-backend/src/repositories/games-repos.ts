@@ -6,7 +6,13 @@ export function getLeaderBoardsRepo() {
 			score: "desc",
 		},
 		include: {
-			Player: true,
+			Player: {
+				select: {
+					username: true,
+					profileImageId: true,
+					id: true,
+				},
+			},
 		},
 		take: 10,
 	});

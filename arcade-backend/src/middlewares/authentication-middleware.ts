@@ -23,7 +23,6 @@ export async function authenticateToken(
 ) {
 	const authHeader = req.header("Authorization");
 	if (!authHeader) return generateUnauthorizedResponse(res);
-
 	const token = authHeader.split(" ")[1];
 	if (!token) return generateUnauthorizedResponse(res);
 
@@ -35,6 +34,7 @@ export async function authenticateToken(
 			) as JWTPayload;
 			req.userData = user;
 		} catch (err) {
+      console.log(' test')
 			throw invalidDataError(["Invalid token"]);
 		}
 

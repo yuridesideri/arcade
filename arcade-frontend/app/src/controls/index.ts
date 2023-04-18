@@ -93,7 +93,6 @@ export function gameControls(
 		raycaster.setFromCamera(pointer, camera);
 		const intersects = raycaster.intersectObjects(scene.children);
 		if (intersects.length > 0) {
-			console.log(intersects);
 			intersects.forEach((intersect) => {
 				if (
 					intersect.object.userData.name ===
@@ -136,13 +135,13 @@ export function pacmanControlsInterface() {
 	//Functions
 	const keydownEventHandler = (e: KeyboardEvent) => {
 		movePacmanEvent.dynamicInfo.type = "keydown";
-		if (e.key.toLocaleLowerCase() === "a") {
+		if (e.key.toLowerCase() === "a") {
 			movePacmanEvent.dynamicInfo.direction = "left";
-		} else if (e.key.toLocaleLowerCase() === "d") {
+		} else if (e.key.toLowerCase() === "d") {
 			movePacmanEvent.dynamicInfo.direction = "right";
-		} else if (e.key.toLocaleLowerCase() === "w") {
+		} else if (e.key.toLowerCase() === "w") {
 			movePacmanEvent.dynamicInfo.direction = "up";
-		} else if (e.key.toLocaleLowerCase() === "s") {
+		} else if (e.key.toLowerCase() === "s") {
 			movePacmanEvent.dynamicInfo.direction = "down";
 		} else {
 			return;
@@ -153,13 +152,13 @@ export function pacmanControlsInterface() {
 	//TODO: BUG ESTÁ AQUI
 	const keyupEventHandler = (e: KeyboardEvent) => {
 		movePacmanEvent.dynamicInfo.type = "keyup";
-		if (e.key.toLocaleLowerCase() === "a") {
+		if (e.key.toLowerCase() === "a") {
 			movePacmanEvent.dynamicInfo.direction = "left";
-		} else if (e.key.toLocaleLowerCase() === "d") {
+		} else if (e.key.toLowerCase() === "d") {
 			movePacmanEvent.dynamicInfo.direction = "right";  
-		} else if (e.key.toLocaleLowerCase() === "w") {
+		} else if (e.key.toLowerCase() === "w") {
 			movePacmanEvent.dynamicInfo.direction = "up";
-		} else if (e.key.toLocaleLowerCase() === "s") {
+		} else if (e.key.toLowerCase() === "s") {
 			movePacmanEvent.dynamicInfo.direction = "down";
 		} else {
 			return;

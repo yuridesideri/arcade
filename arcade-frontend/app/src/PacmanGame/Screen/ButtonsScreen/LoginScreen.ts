@@ -5,15 +5,14 @@ import "./buttons-screen.css";
 export function LoginScreen(): HTMLElement {
 	const LoginScreenElement = document.createElement("div");
 	LoginScreenElement.className = "login-screen";
-    
 
-    function returnFunction(e?: Event){
-        const parentElement = LoginScreenElement.parentElement;
-        if (parentElement) {
-            parentElement.appendChild(ProfileScreen());
-            parentElement.removeChild(LoginScreenElement);
-        }
-    }
+	function returnFunction(e?: Event) {
+		const parentElement = LoginScreenElement.parentElement;
+		if (parentElement) {
+			parentElement.appendChild(ProfileScreen());
+			parentElement.removeChild(LoginScreenElement);
+		}
+	}
 
 	LoginScreenElement.innerHTML = `
     <div class="login-section">
@@ -25,36 +24,39 @@ export function LoginScreen(): HTMLElement {
     </div>
     `;
 
-    const returnArrow = document.createElement("button");
-    returnArrow.className = "return-arrow";
-    returnArrow.innerHTML = `<ion-icon name="arrow-back-outline"></ion-icon>`;
-    returnArrow.onclick = (e?) => {
-        const parentElement = LoginScreenElement.parentElement;
-        if (parentElement) {
-            parentElement.appendChild(ProfileScreen());
-            parentElement.removeChild(LoginScreenElement);
-        }
-    }
-    const formElement = LoginScreenElement.querySelector(
+	const returnArrow = document.createElement("button");
+	returnArrow.className = "return-arrow";
+	returnArrow.innerHTML = `<ion-icon name="arrow-back-outline"></ion-icon>`;
+	returnArrow.onclick = (e?) => {
+		const parentElement = LoginScreenElement.parentElement;
+		if (parentElement) {
+			parentElement.appendChild(ProfileScreen());
+			parentElement.removeChild(LoginScreenElement);
+		}
+	};
+	const formElement = LoginScreenElement.querySelector(
 		"form"
 	) as HTMLFormElement;
 	formElement.onsubmit = (e) => {
 		e.preventDefault();
 		const email = formElement.email.value;
 		const password = formElement.password.value;
-		
-		axios.post(import.meta.env.VITE_API_URL + "/auth/login", {
-			password,
-			email,
-		}).then((res) => {
-                localStorage.setItem("userToken", res.data.token);
-                returnFunction();
-        }).catch((err) => {
-            alert("Something went wrong!");
-        }
-        );
+
+		axios
+			.post(import.meta.env.VITE_API_URL + "/auth/login", {
+				password,
+				email,
+			})
+			.then((res) => {
+				console.log(res.data.token);
+				localStorage.setItem("userToken", res.data.token);
+				returnFunction();
+			})
+			.catch((err) => {
+				alert("Something went wrong!");
+			});
 	};
-    LoginScreenElement.appendChild(returnArrow);
+	LoginScreenElement.appendChild(returnArrow);
 
 	return LoginScreenElement;
 }

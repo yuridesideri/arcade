@@ -16,7 +16,6 @@ export function LeaderboardsScreen(): HTMLElement {
 			LeaderboardsScreenElement
 		);
 	}
-
 	axios
 		.get(import.meta.env.VITE_API_URL + "/games/leaderboards")
 		.then(({ data }) => {
@@ -25,9 +24,9 @@ export function LeaderboardsScreen(): HTMLElement {
 				createdAt: Date;
 				score: number;
 				gameDurationSeconds: number;
-				player: {
+				Player: {
 					id: number;
-					profileImageId: string;
+					profileImageId: string | null;
 					username: string;
 				};
 			}[];
@@ -50,12 +49,12 @@ export function LeaderboardsScreen(): HTMLElement {
 			const leaderboardsList = leaderboardsSection.querySelector(
 				".leaderboards-list"
 			) as HTMLDivElement;
-			leaderboards.forEach((leaderboard) => {
-				const { createdAt, score, gameDurationSeconds, player } =
-					leaderboard;
+			leaderboards.forEach((game) => {
+				const { createdAt, score, gameDurationSeconds, Player } =
+					game;
 				const leaderboardComponent = GameComponent(
-					player.username,
-					player.profileImageId,
+					Player.username,
+					Player.profileImageId,
 					score,
 					gameDurationSeconds,
 					createdAt
