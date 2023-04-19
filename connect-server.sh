@@ -1,1 +1,1 @@
-ssh -i "amazonkey.pem" ubuntu@ec2-54-173-170-182.compute-1.amazonaws.com
+ssh -i "yuri-aws.pem" ubuntu@ec2-35-170-249-9.compute-1.amazonaws.com
