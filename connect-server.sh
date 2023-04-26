@@ -1,1 +1,0 @@
-ssh -i "yuri-aws.pem" ubuntu@ec2-35-170-249-9.compute-1.amazonaws.com
